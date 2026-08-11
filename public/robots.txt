@@ -1,0 +1,10 @@
+# Allow all major search engine crawlers to index PicCraft
+User-agent: *
+Allow: /
+
+# Exclude private admin & auth endpoints from search engine indexing
+Disallow: /api/admin/
+Disallow: /api/auth/
+
+# Link to XML Sitemap
+Sitemap: https://piccraft.app/sitemap.xml

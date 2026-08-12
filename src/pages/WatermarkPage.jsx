@@ -207,7 +207,7 @@ export default function WatermarkPage() {
                             <hr className="divider" />
                             <DownloadButton onProcessAll={handleProcessAll} onDownloadZip={handleDownloadZip} isProcessing={isProcessing} processedCount={processedCount} totalCount={items.length} activeTool="watermark" />
                         </div>
-                        <AdSlot type="rectangle" />
+                        {!isAdFree && <AdSlot type="rectangle" />}
                     </div>
                 )}
             </div>

@@ -1,9 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { X, User, Mail, Lock, UserPlus, LogIn, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../context/AuthContext';
 
-export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
+const GoogleSignInButton = memo(function GoogleSignInButton({ onSuccess, onError }) {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const isUnconfigured = !clientId || clientId.includes('REPLACE_WITH_YOUR');
+
+  if (isUnconfigured) {
+    return (
+      <div style={{
+        padding: '10px 14px',
+        borderRadius: 12,
+        background: '#F8FAFC',
+        border: '1px solid #E2E8F0',
+        fontSize: '0.78rem',
+        color: '#64748B',
+        textAlign: 'center',
+        width: '100%'
+      }}>
+        Google Sign-In (Set <code>VITE_GOOGLE_CLIENT_ID</code> in <code>frontend/.env</code>)
+      </div>
+    );
+  }
+
+  return (
+    <GoogleLogin
+      onSuccess={onSuccess}
+      onError={onError}
+      useOneTap={false}
+      theme="outline"
+      size="large"
+      shape="pill"
+      text="continue_with"
+      width="380"
+    />
+  );
+});
+
+export default function AuthModal({ isOpen, onClose, initialMode = 'login', onSuccess }) {
   const [mode, setMode] = useState(initialMode); // 'login' | 'register'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -22,6 +57,27 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
       setSuccess('');
     }
   }, [isOpen, initialMode]);
+
+  const handleGoogleSuccess = useCallback(async (credentialResponse) => {
+    try {
+      setError('');
+      setIsSubmitting(true);
+      await loginWithGoogle(credentialResponse.credential);
+      setSuccess('Successfully signed in with Google!');
+      setTimeout(() => {
+        onClose();
+        if (typeof onSuccess === 'function') onSuccess();
+      }, 600);
+    } catch (err) {
+      setError(err.message || 'Google authentication failed.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [loginWithGoogle, onClose, onSuccess]);
+
+  const handleGoogleError = useCallback(() => {
+    setError('Google Sign-In failed. Check Authorized Javascript Origins in Google Cloud Console.');
+  }, []);
 
   if (!isOpen) return null;
 
@@ -52,30 +108,13 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
       }
       setTimeout(() => {
         onClose();
+        if (typeof onSuccess === 'function') onSuccess();
       }, 600);
     } catch (err) {
       setError(err.message || 'An error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      setError('');
-      setIsSubmitting(true);
-      await loginWithGoogle(credentialResponse.credential);
-      setSuccess('Successfully signed in with Google!');
-      setTimeout(() => onClose(), 600);
-    } catch (err) {
-      setError(err.message || 'Google authentication failed.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleGoogleError = () => {
-    setError('Google Sign-In failed. Please try again.');
   };
 
   return (
@@ -183,15 +222,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
 
           {/* ── Official Google Sign-In Button via @react-oauth/google ── */}
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <GoogleLogin
+            <GoogleSignInButton
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleError}
-              useOneTap={false}
-              theme="outline"
-              size="large"
-              shape="pill"
-              text="continue_with"
-              width="380"
             />
           </div>
 

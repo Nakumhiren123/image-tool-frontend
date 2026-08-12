@@ -297,7 +297,7 @@ export default function ConverterPage({ from, to }) {
                                 activeTool="convert"
                             />
                         </div>
-                        <AdSlot type="rectangle" />
+                        {!isAdFree && <AdSlot type="rectangle" />}
                     </div>
                 )}
             </div>

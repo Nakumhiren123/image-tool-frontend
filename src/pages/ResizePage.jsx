@@ -232,7 +232,7 @@ export default function ResizePage() {
                                 activeTool="resize"
                             />
                         </div>
-                        <AdSlot type="rectangle" />
+                        {!isAdFree && <AdSlot type="rectangle" />}
                     </div>
                 )}
             </div>

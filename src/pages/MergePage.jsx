@@ -407,7 +407,7 @@ export default function MergePage() {
                             />
                         </div>
 
-                        <AdSlot type="rectangle" />
+                        {!isAdFree && <AdSlot type="rectangle" />}
                     </div>
                 )}
             </div>

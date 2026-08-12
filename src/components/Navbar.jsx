@@ -288,7 +288,7 @@ export default function Navbar({ onOpenAuth, onOpenPricing, onOpenAdmin }) {
 
           {/* Desktop auth */}
           <div className="navbar-auth-desktop">
-            {user ? (
+            {user && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 10px 4px 5px', borderRadius: 99, background: '#F1F5F9', border: '1px solid #E2E8F0' }}>
                   <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)', color: '#fff', fontSize: '0.7rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -300,17 +300,6 @@ export default function Navbar({ onOpenAuth, onOpenPricing, onOpenAdmin }) {
                 </div>
                 <button onClick={logoutUser} className="btn btn-ghost btn-sm" style={{ padding: '6px 9px', borderRadius: 8 }} title="Sign Out">
                   <LogOut size={13} color="#64748B" />
-                </button>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <button onClick={() => onOpenAuth('login')} className="btn btn-ghost btn-sm" style={{ borderRadius: 9, padding: '6px 11px', fontWeight: 700, fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
-                  <LogIn size={13} color="#3B82F6" />
-                  <span>Sign In</span>
-                </button>
-                <button onClick={() => onOpenAuth('register')} className="btn btn-primary btn-sm" style={{ borderRadius: 9, padding: '7px 13px', fontWeight: 800, fontSize: '0.78rem', boxShadow: '0 3px 12px rgba(59,130,246,0.3)', whiteSpace: 'nowrap' }}>
-                  <UserIcon size={13} />
-                  <span>Sign Up</span>
                 </button>
               </div>
             )}
@@ -441,8 +430,8 @@ export default function Navbar({ onOpenAuth, onOpenPricing, onOpenAdmin }) {
           )}
 
           {/* Auth row in mobile menu */}
-          <div className="navbar-mobile-auth-row">
-            {user ? (
+          {user && (
+            <div className="navbar-mobile-auth-row">
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)', color: '#fff', fontSize: '0.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -455,19 +444,8 @@ export default function Navbar({ onOpenAuth, onOpenPricing, onOpenAdmin }) {
                   <span>Sign Out</span>
                 </button>
               </div>
-            ) : (
-              <>
-                <button onClick={() => { onOpenAuth('login'); setMenuOpen(false); }} className="btn btn-ghost btn-sm" style={{ flex: 1, justifyContent: 'center', borderRadius: 9, padding: '9px 12px', fontWeight: 700 }}>
-                  <LogIn size={15} color="#3B82F6" />
-                  <span>Sign In</span>
-                </button>
-                <button onClick={() => { onOpenAuth('register'); setMenuOpen(false); }} className="btn btn-primary btn-sm" style={{ flex: 1, justifyContent: 'center', borderRadius: 9, padding: '9px 12px', fontWeight: 800, boxShadow: '0 3px 12px rgba(59,130,246,0.3)' }}>
-                  <UserIcon size={15} />
-                  <span>Sign Up</span>
-                </button>
-              </>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
 

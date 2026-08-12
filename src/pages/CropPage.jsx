@@ -460,7 +460,7 @@ export default function CropPage() {
                         </div>
 
                         {/* Sidebar ad */}
-                        <AdSlot type="rectangle" />
+                        {!isAdFree && <AdSlot type="rectangle" />}
                     </div>
                 )}
             </div>

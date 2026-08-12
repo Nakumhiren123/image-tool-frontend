@@ -10,6 +10,7 @@ import AuthModal from './components/auth/AuthModal';
 import PricingModal from './components/pricing/PricingModal';
 import AdminPanelModal from './components/admin/AdminPanelModal';
 import ScrollToTop from './components/ScrollToTop';
+import { useAuth } from './context/AuthContext';
 
 // Tool pages
 import ConverterPage from './pages/ConverterPage';
@@ -62,22 +63,24 @@ function ScrollToTopButton() {
 }
 
 export default function App() {
+  const { isAdFree } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [adModal, setAdModal] = useState({ open: false, onComplete: null, fileName: '' });
+  const [redirectAfterAuth, setRedirectAfterAuth] = useState(null);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar
-        onOpenAuth={(mode) => { setAuthModalMode(mode); setAuthModalOpen(true); }}
+        onOpenAuth={(mode) => { setRedirectAfterAuth(null); setAuthModalMode(mode); setAuthModalOpen(true); }}
         onOpenPricing={() => setPricingModalOpen(true)}
         onOpenAdmin={() => setAdminModalOpen(true)}
       />
 
-      <div className="side-ad-gutter side-ad-left"><AdSlot type="skyscraper" /></div>
-      <div className="side-ad-gutter side-ad-right"><AdSlot type="skyscraper" /></div>
+      {!isAdFree && <div className="side-ad-gutter side-ad-left"><AdSlot type="skyscraper" /></div>}
+      {!isAdFree && <div className="side-ad-gutter side-ad-right"><AdSlot type="skyscraper" /></div>}
 
       <Routes>
         {/* Default redirect */}
@@ -173,7 +176,8 @@ export default function App() {
       </Routes>
 
       <SEOContentSection />
-      <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>
+
+      {!isAdFree && <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>}
       <Footer />
 
       {/* Global Modals */}
@@ -188,11 +192,22 @@ export default function App() {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         initialMode={authModalMode}
+        onSuccess={() => {
+          if (redirectAfterAuth) {
+            setRedirectAfterAuth(null);
+            setPricingModalOpen(true);
+          }
+        }}
       />
       <PricingModal
         isOpen={pricingModalOpen}
         onClose={() => setPricingModalOpen(false)}
-        onOpenAuth={(mode) => { setAuthModalMode(mode); setAuthModalOpen(true); }}
+        onOpenAuth={(mode, planId) => {
+          setRedirectAfterAuth(planId || 'pricing');
+          setPricingModalOpen(false);
+          setAuthModalMode(mode);
+          setAuthModalOpen(true);
+        }}
       />
       <AdminPanelModal
         isOpen={adminModalOpen}
@@ -203,9 +218,6 @@ export default function App() {
   );
 }
 
-
-// import React, { useState, useEffect } from 'react';
-// import Navbar from './components/Navbar';
 // import Footer from './components/Footer';
 // import UploadArea from './components/UploadArea';
 // import FileCard from './components/FileCard';

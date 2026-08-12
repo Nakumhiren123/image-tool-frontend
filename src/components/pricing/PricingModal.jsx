@@ -33,7 +33,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
   const handleSubscribe = async (planId) => {
     if (!user) {
       onClose();
-      onOpenAuth('register');
+      if (typeof onOpenAuth === 'function') onOpenAuth('register', planId);
       return;
     }
 

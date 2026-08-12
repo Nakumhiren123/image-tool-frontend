@@ -446,7 +446,7 @@ export default function FilterPage() {
                             />
                         </div>
 
-                        <AdSlot type="rectangle" />
+                        {!isAdFree && <AdSlot type="rectangle" />}
                     </div>
                 )}
             </div>

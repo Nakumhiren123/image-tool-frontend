@@ -28,15 +28,41 @@ function ConvertDropdown({ onClose, triggerRef, dropdownPortalRef }) {
   const navigate = useNavigate();
   const [position, setPosition] = React.useState({ top: 0, left: 0 });
 
-  // Calculate position from the trigger button's screen location
+  // Calculate a viewport-safe position from the trigger button
   React.useEffect(() => {
-    if (triggerRef?.current) {
+    const updatePosition = () => {
+      if (!triggerRef?.current) return;
+
       const rect = triggerRef.current.getBoundingClientRect();
+
+      const dropdownWidth = Math.min(680, window.innerWidth - 32);
+      const halfWidth = dropdownWidth / 2;
+
+      const triggerCenter = rect.left + rect.width / 2;
+
+      const minCenter = 16 + halfWidth;
+      const maxCenter = window.innerWidth - 16 - halfWidth;
+
+      const safeCenter = Math.max(
+        minCenter,
+        Math.min(triggerCenter, maxCenter)
+      );
+
       setPosition({
-        top: rect.bottom + window.scrollY + 8,
-        left: rect.left + window.scrollX + rect.width / 2,
+        top: rect.bottom + 8,
+        left: safeCenter,
       });
-    }
+    };
+
+    updatePosition();
+
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition);
+
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition);
+    };
   }, [triggerRef]);
 
   const handleClick = (slug) => {
@@ -46,7 +72,7 @@ function ConvertDropdown({ onClose, triggerRef, dropdownPortalRef }) {
 
   return createPortal(
     <div ref={dropdownPortalRef} style={{
-      position: 'absolute',
+      position: 'fixed',
       top: position.top,
       left: position.left,
       transform: 'translateX(-50%)',

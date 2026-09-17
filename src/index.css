@@ -799,15 +799,15 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 /* Only display skyscraper gutter ads on ultra-wide monitors (>= 1680px) */
-@media (min-width: 1680px) {
+@media (min-width: 1400px) {
   .side-ad-left {
     display: block;
-    left: calc(50vw - 800px);
+    left: 0;
   }
 
   .side-ad-right {
     display: block;
-    right: calc(50vw - 800px);
+    right: 0;
   }
 }
 

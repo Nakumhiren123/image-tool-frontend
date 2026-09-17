@@ -31,9 +31,14 @@ export async function loadImage(file) {
       URL.revokeObjectURL(url);
       resolve(img);
     };
-    img.onerror = (err) => {
+    img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error('Failed to load image file.'));
+
+      reject(
+        new Error(
+          'Invalid or corrupted image file. Please upload a real JPG, PNG, WEBP, GIF, AVIF, BMP, TIFF, or HEIC image.'
+        )
+      );
     };
     img.src = url;
   });
@@ -236,27 +241,147 @@ export async function createAnimatedGifFromPhoto(file) {
  */
 export async function applyFilterToImage(file, filterMode = 'normal') {
   const img = await loadImage(file);
+
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;
   canvas.height = img.naturalHeight;
+
   const ctx = canvas.getContext('2d');
 
-  if (filterMode === 'grayscale') ctx.filter = 'grayscale(100%)';
-  else if (filterMode === 'sepia') ctx.filter = 'sepia(100%)';
-  else if (filterMode === 'invert') ctx.filter = 'invert(100%)';
-  else if (filterMode === 'warm') ctx.filter = 'sepia(30%) contrast(110%) brightness(105%)';
-  else if (filterMode === 'cool') ctx.filter = 'hue-rotate(180deg) saturate(120%)';
-  else if (filterMode === 'contrast') ctx.filter = 'contrast(160%) brightness(95%)';
-  else if (filterMode === 'neon') ctx.filter = 'saturate(200%) hue-rotate(90deg) contrast(130%)';
+  if (!ctx) {
+    throw new Error('Unable to create image processing context.');
+  }
 
+  // Always draw the original image first.
+  // Pixel processing below works reliably for both
+  // full-color and already grayscale images.
   ctx.drawImage(img, 0, 0);
+
+  if (filterMode !== 'normal' && filterMode !== 'colorize') {
+    const imageData = ctx.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      let r = data[i];
+      let g = data[i + 1];
+      let b = data[i + 2];
+
+      if (filterMode === 'grayscale') {
+        const gray = Math.round(
+          0.299 * r +
+          0.587 * g +
+          0.114 * b
+        );
+
+        r = gray;
+        g = gray;
+        b = gray;
+      }
+
+      else if (filterMode === 'sepia') {
+        const nr =
+          0.393 * r +
+          0.769 * g +
+          0.189 * b;
+
+        const ng =
+          0.349 * r +
+          0.686 * g +
+          0.168 * b;
+
+        const nb =
+          0.272 * r +
+          0.534 * g +
+          0.131 * b;
+
+        r = Math.min(255, nr);
+        g = Math.min(255, ng);
+        b = Math.min(255, nb);
+      }
+
+      else if (filterMode === 'invert') {
+        r = 255 - r;
+        g = 255 - g;
+        b = 255 - b;
+      }
+
+      else if (filterMode === 'warm') {
+        const nr = r * 1.10 + 12;
+        const ng = g * 1.02 + 4;
+        const nb = b * 0.88;
+
+        r = Math.min(255, nr);
+        g = Math.min(255, ng);
+        b = Math.max(0, nb);
+      }
+
+      else if (filterMode === 'cool') {
+        const nr = r * 0.88;
+        const ng = g * 1.02;
+        const nb = b * 1.15 + 8;
+
+        r = Math.max(0, nr);
+        g = Math.min(255, ng);
+        b = Math.min(255, nb);
+      }
+
+      else if (filterMode === 'contrast') {
+        const factor = 1.6;
+
+        r = (r - 128) * factor + 128;
+        g = (g - 128) * factor + 128;
+        b = (b - 128) * factor + 128;
+
+        r = Math.max(0, Math.min(255, r));
+        g = Math.max(0, Math.min(255, g));
+        b = Math.max(0, Math.min(255, b));
+      }
+
+      else if (filterMode === 'neon') {
+        // Increase saturation-like separation between channels.
+        const avg = (r + g + b) / 3;
+
+        r = Math.max(0, Math.min(255, avg + (r - avg) * 2.0 + 20));
+        g = Math.max(0, Math.min(255, avg + (g - avg) * 2.0 + 10));
+        b = Math.max(0, Math.min(255, avg + (b - avg) * 2.0 + 35));
+
+        // Additional blue/cyan shift.
+        const neonR = r * 0.75;
+        const neonG = Math.min(255, g * 1.10 + 10);
+        const neonB = Math.min(255, b * 1.20 + 20);
+
+        r = neonR;
+        g = neonG;
+        b = neonB;
+      }
+
+      data[i] = Math.round(Math.max(0, Math.min(255, r)));
+      data[i + 1] = Math.round(Math.max(0, Math.min(255, g)));
+      data[i + 2] = Math.round(Math.max(0, Math.min(255, b)));
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+  }
 
   if (filterMode === 'colorize') {
     colorizeGrayscaleImage(canvas);
   }
 
   const fmt = getExportFormat(file, 'jpeg');
-  return exportCanvasToBlob(canvas, fmt, file, 0.90, 'filtered');
+
+  return exportCanvasToBlob(
+    canvas,
+    fmt,
+    file,
+    0.90,
+    'filtered'
+  );
 }
 
 /**
@@ -458,58 +583,109 @@ export async function convertImage(file, targetFormat = 'png', quality = 0.85, o
   // DOCX (Word Document) Conversion
   if (fmt === 'docx') {
     const { Document, Packer, Paragraph, ImageRun } = await import('docx');
-    const img = await loadImage(file);
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
 
-    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
-    const arrayBuffer = await blob.arrayBuffer();
+    const img = await loadImage(file);
+
+    if (!img.naturalWidth || !img.naturalHeight) {
+      throw new Error('Unable to determine image dimensions.');
+    }
 
     const maxW = 550;
     const maxH = 750;
-    let scaleW = img.naturalWidth;
-    let scaleH = img.naturalHeight;
-    if (scaleW > maxW) {
-      scaleH = Math.round((maxW / scaleW) * scaleH);
-      scaleW = maxW;
-    }
-    if (scaleH > maxH) {
-      scaleW = Math.round((maxH / scaleH) * scaleW);
-      scaleH = maxH;
+
+    let width = img.naturalWidth;
+    let height = img.naturalHeight;
+
+    const scale = Math.min(
+      maxW / width,
+      maxH / height,
+      1
+    );
+
+    width = Math.max(1, Math.round(width * scale));
+    height = Math.max(1, Math.round(height * scale));
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      throw new Error('Unable to create image processing canvas.');
     }
 
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.drawImage(img, 0, 0, width, height);
+
+    const jpegBlob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(
+              new Error(
+                'Unable to prepare image for DOCX conversion.'
+              )
+            );
+            return;
+          }
+
+          resolve(blob);
+        },
+        'image/jpeg',
+        quality
+      );
+    });
+
+    const arrayBuffer = await jpegBlob.arrayBuffer();
+
     const doc = new Document({
-      sections: [{
-        properties: {},
-        children: [
-          new Paragraph({
-            children: [
-              new ImageRun({
-                data: arrayBuffer,
-                transformation: { width: scaleW, height: scaleH },
-                type: 'jpg'
-              })
-            ]
-          })
-        ]
-      }]
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              children: [
+                new ImageRun({
+                  data: arrayBuffer,
+                  transformation: {
+                    width,
+                    height,
+                  },
+                  type: 'jpg',
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
     });
 
     const docxBlob = await Packer.toBlob(doc);
-    const newName = file.name.replace(/\.[^/.]+$/, '') + '.docx';
-    const docxFile = new File([docxBlob], newName, { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+
+    if (!docxBlob || docxBlob.size === 0) {
+      throw new Error('Unable to create DOCX document.');
+    }
+
+    const newName =
+      file.name.replace(/\.[^/.]+$/, '') + '.docx';
+
+    const docxFile = new File(
+      [docxBlob],
+      newName,
+      {
+        type:
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      }
+    );
 
     return {
       file: docxFile,
       url: URL.createObjectURL(docxBlob),
       width: img.naturalWidth,
       height: img.naturalHeight,
-      size: docxBlob.size
+      size: docxBlob.size,
     };
   }
 
@@ -673,38 +849,117 @@ export async function compressToTargetSize(file, targetKB, format = 'jpeg', prog
 /**
  * Resize Image
  */
-export async function resizeImage(file, targetWidth, targetHeight, preserveAspectRatio = true, format = '') {
+const MAX_RESIZE_WIDTH = 20000;
+const MAX_RESIZE_HEIGHT = 20000;
+const MAX_RESIZE_PIXELS = 100_000_000;
+
+export async function resizeImage(
+  file,
+  targetWidth,
+  targetHeight,
+  preserveAspectRatio = true,
+  format = ''
+) {
   const img = await loadImage(file);
+
   let w = targetWidth || img.naturalWidth;
   let h = targetHeight || img.naturalHeight;
 
+  w = Number(w);
+  h = Number(h);
+
+  if (
+    !Number.isFinite(w) ||
+    !Number.isFinite(h) ||
+    w < 1 ||
+    h < 1
+  ) {
+    throw new Error(
+      'Width and height must be valid positive numbers.'
+    );
+  }
+
   if (preserveAspectRatio) {
-    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    const aspectRatio =
+      img.naturalWidth / img.naturalHeight;
+
     if (targetWidth && !targetHeight) {
-      h = Math.round(targetWidth / aspectRatio);
+      h = Math.round(w / aspectRatio);
     } else if (!targetWidth && targetHeight) {
-      w = Math.round(targetHeight * aspectRatio);
+      w = Math.round(h * aspectRatio);
     } else if (targetWidth && targetHeight) {
-      const widthRatio = targetWidth / img.naturalWidth;
-      const heightRatio = targetHeight / img.naturalHeight;
-      const scale = Math.min(widthRatio, heightRatio);
-      w = Math.round(img.naturalWidth * scale);
-      h = Math.round(img.naturalHeight * scale);
+      const widthRatio =
+        w / img.naturalWidth;
+
+      const heightRatio =
+        h / img.naturalHeight;
+
+      const scale = Math.min(
+        widthRatio,
+        heightRatio
+      );
+
+      w = Math.round(
+        img.naturalWidth * scale
+      );
+
+      h = Math.round(
+        img.naturalHeight * scale
+      );
     }
   }
 
+  if (w > MAX_RESIZE_WIDTH) {
+    throw new Error(
+      `Width must be between 1 and ${MAX_RESIZE_WIDTH}px.`
+    );
+  }
+
+  if (h > MAX_RESIZE_HEIGHT) {
+    throw new Error(
+      `Height must be between 1 and ${MAX_RESIZE_HEIGHT}px.`
+    );
+  }
+
+  if (w * h > MAX_RESIZE_PIXELS) {
+    throw new Error(
+      'The requested image dimensions are too large to process safely.'
+    );
+  }
+
   const canvas = document.createElement('canvas');
+
   canvas.width = Math.max(1, w);
   canvas.height = Math.max(1, h);
+
   const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    throw new Error(
+      'Unable to create image processing context.'
+    );
+  }
 
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
 
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(
+    img,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
   const fmt = getExportFormat(file, format);
-  return exportCanvasToBlob(canvas, fmt, file, 0.82, `${w}x${h}`);
+
+  return exportCanvasToBlob(
+    canvas,
+    fmt,
+    file,
+    0.82,
+    `${w}x${h}`
+  );
 }
 
 /**

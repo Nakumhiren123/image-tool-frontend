@@ -81,62 +81,7 @@ const res = await fetch('https://api.piccraft.app/api/resize', {
   body: formData
 });
 const blob = await res.blob();`,
-    },
-    {
-        name: 'Image Cropper',
-        method: 'POST',
-        path: '/api/crop',
-        desc: 'Crop an image to a specific region or aspect ratio.',
-        params: [
-            { name: 'image', type: 'File', required: true, desc: 'The image file to crop.' },
-            { name: 'x', type: 'number', required: true, desc: 'Left offset in pixels.' },
-            { name: 'y', type: 'number', required: true, desc: 'Top offset in pixels.' },
-            { name: 'width', type: 'number', required: true, desc: 'Crop width in pixels.' },
-            { name: 'height', type: 'number', required: true, desc: 'Crop height in pixels.' },
-        ],
-        curl: `curl -X POST "https://api.piccraft.app/api/crop" \\
-  -F "image=@photo.jpg" \\
-  -F "x=100" -F "y=50" \\
-  -F "width=400" -F "height=400" \\
-  --output cropped.jpg`,
-        js: `const formData = new FormData();
-formData.append('image', file);
-formData.append('x', '100');
-formData.append('y', '50');
-formData.append('width', '400');
-formData.append('height', '400');
-
-const res = await fetch('https://api.piccraft.app/api/crop', {
-  method: 'POST',
-  body: formData
-});
-const blob = await res.blob();`,
-    },
-    {
-        name: 'Rotate & Flip',
-        method: 'POST',
-        path: '/api/rotate',
-        desc: 'Rotate or flip an image.',
-        params: [
-            { name: 'image', type: 'File', required: true, desc: 'The image file.' },
-            { name: 'angle', type: 'number', required: false, desc: 'Rotation angle: 90 | 180 | 270.' },
-            { name: 'flipH', type: 'boolean', required: false, desc: 'Flip horizontally.' },
-            { name: 'flipV', type: 'boolean', required: false, desc: 'Flip vertically.' },
-        ],
-        curl: `curl -X POST "https://api.piccraft.app/api/rotate" \\
-  -F "image=@photo.jpg" \\
-  -F "angle=90" \\
-  --output rotated.jpg`,
-        js: `const formData = new FormData();
-formData.append('image', file);
-formData.append('angle', '90');
-
-const res = await fetch('https://api.piccraft.app/api/rotate', {
-  method: 'POST',
-  body: formData
-});
-const blob = await res.blob();`,
-    },
+    }
 ];
 
 export default function ApiDocsPage() {
@@ -210,9 +155,17 @@ export default function ApiDocsPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 40 }}>
                     {[
                         { icon: <Zap size={18} color="#F59E0B" />, label: 'Base URL', value: 'https://api.piccraft.app' },
-                        { icon: <Key size={18} color="#6366F1" />, label: 'Authentication', value: 'No key required (Free Tier)' },
+                        {
+                            icon: <Key size={18} color="#6366F1" />,
+                            label: 'Authentication',
+                            value: 'No public API key required'
+                        },
                         { icon: <Terminal size={18} color="#10B981" />, label: 'Response Format', value: 'Binary image stream' },
-                        { icon: <BookOpen size={18} color="#3B82F6" />, label: 'Rate Limit', value: '100 req / hour (Free)' },
+                        {
+                            icon: <BookOpen size={18} color="#3B82F6" />,
+                            label: 'API Access',
+                            value: 'Available through documented endpoints'
+                        },
                     ].map((box) => (
                         <div key={box.label} style={{
                             background: '#fff', borderRadius: 14, border: '1.5px solid #E2E8F0',

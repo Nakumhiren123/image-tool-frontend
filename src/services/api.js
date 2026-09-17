@@ -2,7 +2,11 @@
  * Backend API Client Service for Node.js + Express + Sharp Server
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { csrfFetch } from './csrf';
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
 
 export const apiService = {
   /**
@@ -26,8 +30,9 @@ export const apiService = {
     formData.append('format', targetFormat);
     formData.append('quality', options.quality || 80);
 
-    const response = await fetch(`${API_BASE_URL}/convert`, {
+    const response = await csrfFetch(`${API_BASE_URL}/convert`, {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     });
 
@@ -55,8 +60,9 @@ export const apiService = {
     formData.append('quality', quality);
     if (targetKB) formData.append('targetKB', targetKB);
 
-    const response = await fetch(`${API_BASE_URL}/compress`, {
+    const response = await csrfFetch(`${API_BASE_URL}/compress`, {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     });
 
@@ -85,11 +91,11 @@ export const apiService = {
     formData.append('height', height);
     formData.append('maintainAspect', maintainAspect);
 
-    const response = await fetch(`${API_BASE_URL}/resize`, {
+    const response = await csrfFetch(`${API_BASE_URL}/resize`, {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     });
-
     if (!response.ok) {
       throw new Error(`Backend Resize failed: ${response.statusText}`);
     }

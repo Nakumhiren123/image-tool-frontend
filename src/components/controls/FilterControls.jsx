@@ -2,7 +2,7 @@ import React from 'react';
 import { Palette, Check } from 'lucide-react';
 
 const FILTERS = [
-  { id: 'normal', label: 'Full Color', icon: '🎨', desc: 'Original Colors' },
+  { id: 'colorize', label: 'Full Color', icon: '🎨', desc: 'Restore Color' },
   { id: 'grayscale', label: 'Black & White', icon: '🌗', desc: 'Classic B&W' },
   { id: 'sepia', label: 'Sepia Vintage', icon: '📜', desc: 'Warm Antique' },
   { id: 'invert', label: 'Invert Colors', icon: '🔄', desc: 'Negative FX' },

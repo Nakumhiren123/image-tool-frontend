@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Image, Shield, FileText, Code2, Mail } from 'lucide-react';
+import { Heart, Image, Shield, FileText, Mail } from 'lucide-react';
 
 const TOOL_LINKS = [
   { label: 'Compress Image', to: '/compress' },

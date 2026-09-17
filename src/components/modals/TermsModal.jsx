@@ -66,7 +66,7 @@ export default function TermsModal({ isOpen, onClose }) {
               <AlertTriangle size={18} color="#F59E0B" /> 2. Fair Usage & Pro Limits
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.6 }}>
-              Free tier users are limited to processing up to <strong>5 images per batch</strong> and maximum file sizes of 50 MB. <strong>PicCraft Pro</strong> subscribers enjoy unlimited batch processing (100+ images), up to 500 MB file limits, and an ad-free clean interface. Automated scraping or bot abuse is strictly prohibited.
+              Free tier users are limited to processing up to <strong>5 images per batch</strong> and a maximum file size of 10 MB per upload request. <strong>PicCraft Pro</strong> provides premium processing features and an ad-free experience, subject to the limits and availability described on the platform. Automated scraping, abusive automation, or attempts to bypass platform limits are strictly prohibited.
             </p>
           </div>
 
@@ -75,16 +75,35 @@ export default function TermsModal({ isOpen, onClose }) {
               <CreditCard size={18} color="#3B82F6" /> 3. Subscriptions & Billing
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.6 }}>
-              Subscriptions are billed in advance on a Monthly (₹399 / $5.99) or Yearly (₹4,389 / $64.99) recurring basis through Razorpay. You can cancel your subscription at any time from your billing preferences or by contacting support.
+              Paid plans are billed through Razorpay according to the plan, price, and duration
+              displayed at checkout. Once payment is successfully completed, the purchased plan
+              remains active for its applicable period and cannot be cancelled or refunded,
+              except where required by applicable law.
             </p>
           </div>
 
-          <div style={{ background: '#ECFDF5', padding: 20, borderRadius: 16, border: '1px solid #A7F3D0' }}>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#065F46', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <RefreshCw size={18} color="#10B981" /> 4. 7-Day Money-Back Guarantee & Refund Policy
+          <div style={{ background: '#FFF7ED', padding: 20, borderRadius: 16, border: '1px solid #FED7AA' }}>
+            <h3 style={{
+              fontSize: '1.05rem',
+              fontWeight: 800,
+              color: '#9A3412',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              marginBottom: 8
+            }}>
+              <RefreshCw size={18} color="#F97316" /> 4. Cancellation & Refund Policy
             </h3>
-            <p style={{ fontSize: '0.88rem', color: '#047857', lineHeight: 1.6 }}>
-              We stand behind PicCraft Pro. If you are unsatisfied with your Pro subscription for any reason within <strong>7 days of purchase</strong>, contact support at <code>support@piccraft.app</code> for a full, no-questions-asked refund processed directly to your original payment method via Razorpay within 5–7 business days.
+
+            <p style={{
+              fontSize: '0.88rem',
+              color: '#9A3412',
+              lineHeight: 1.6
+            }}>
+              Paid plans are non-refundable and cannot be cancelled once the payment has been successfully completed.
+              The purchased plan remains active for the applicable subscription period. We do not provide refunds
+              for unused time, partial periods, change of mind, or failure to use the service. Any refund required
+              by applicable law will be handled in accordance with that law.
             </p>
           </div>
 

@@ -1,6 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, CheckCircle, RefreshCw, AlertTriangle, CreditCard, ArrowLeft, Image, Ban, Globe } from 'lucide-react';
+import {
+    FileText,
+    CheckCircle,
+    AlertTriangle,
+    ArrowLeft,
+    Image,
+    Ban,
+    CreditCard,
+} from 'lucide-react';
 
 export default function TermsPage() {
     return (
@@ -54,11 +62,10 @@ export default function TermsPage() {
                         {[
                             'Acceptance of Terms',
                             'Fair Usage & Pro Limits',
-                            // 'Subscriptions & Billing',
+                            'Payment & Cancellation Policy',
                             'Prohibited Use',
                             'Intellectual Property',
                             'Limitation of Liability',
-                            // 'Governing Law',
                         ].map((item, i) => (
                             <li key={i}>
                                 <a href={`#term-${i + 1}`} style={{ color: '#3B82F6', fontSize: '0.88rem', fontWeight: 600, textDecoration: 'none' }}>
@@ -84,14 +91,34 @@ export default function TermsPage() {
                     <Section id="term-2" icon={<AlertTriangle size={20} color="#F59E0B" />} title="2. Fair Usage & Pro Limits">
                         <p>
                             Free tier users are limited to processing up to <strong>5 images per batch</strong> and
-                            maximum file sizes of 10 MB. <strong>PicCraft Pro</strong> subscribers enjoy more files then free
-                            batch processing, up to 500 MB file limits, and an ad-free clean interface.
+                            a maximum file size of <strong>10 MB per upload request</strong>. <strong>PicCraft Pro</strong>
+                            provides premium processing features and an ad-free experience, subject to the limits
+                            and availability described on the platform.
                         </p>
                         <ul>
                             <li>Automated scraping, bot usage, or API abuse is strictly prohibited.</li>
                             <li>Accounts found violating fair use may be suspended without notice.</li>
                             <li>Pro features are for personal and commercial use by the account holder only — reselling is not permitted.</li>
                         </ul>
+                    </Section>
+
+                    <Section
+                        id="term-3"
+                        icon={<CreditCard size={20} color="#3B82F6" />}
+                        title="3. Payment & Cancellation Policy"
+                    >
+                        <p>
+                            Paid plans are billed through Razorpay according to the plan, price, and
+                            duration displayed at checkout. Once payment is successfully completed,
+                            the purchased plan remains active for its applicable period.
+                        </p>
+
+                        <p>
+                            Paid plans are non-refundable and cannot be cancelled after successful
+                            payment. We do not provide refunds for unused time, partial periods,
+                            change of mind, or failure to use the service, except where a refund
+                            is required by applicable law.
+                        </p>
                     </Section>
 
                     {/* <Section id="term-3" icon={<CreditCard size={20} color="#3B82F6" />} title="3. Subscriptions & Billing">
@@ -104,7 +131,7 @@ export default function TermsPage() {
 
 
 
-                    <Section id="term-3" icon={<Ban size={20} color="#EF4444" />} title="3. Prohibited Use">
+                    <Section id="term-4" icon={<Ban size={20} color="#EF4444" />} title="3. Prohibited Use">
                         <p>You agree not to use PicCraft to:</p>
                         <ul>
                             <li>Process, distribute, or store illegal, harmful, or offensive content.</li>
@@ -114,7 +141,7 @@ export default function TermsPage() {
                         </ul>
                     </Section>
 
-                    <Section id="term-4" icon={<FileText size={20} color="#6366F1" />} title="4. Intellectual Property">
+                    <Section id="term-5" icon={<FileText size={20} color="#6366F1" />} title="4. Intellectual Property">
                         <p>
                             All content, branding, code, and design of PicCraft is the exclusive property of PicCraft
                             and its licensors, protected by copyright and intellectual property laws. You retain full
@@ -122,7 +149,7 @@ export default function TermsPage() {
                         </p>
                     </Section>
 
-                    <Section id="term-5" icon={<AlertTriangle size={20} color="#94A3B8" />} title="5. Limitation of Liability">
+                    <Section id="term-6" icon={<AlertTriangle size={20} color="#94A3B8" />} title="5. Limitation of Liability">
                         <p>
                             PicCraft is provided "as is" without warranties of any kind. To the fullest extent
                             permitted by law, PicCraft shall not be liable for any indirect, incidental, special,

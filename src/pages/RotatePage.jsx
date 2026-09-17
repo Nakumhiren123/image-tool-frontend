@@ -1,6 +1,6 @@
 // src/pages/RotatePage.jsx
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import UploadArea from '../components/UploadArea';
 import FileCard from '../components/FileCard';
 import RotateControls from '../components/controls/RotateControls';
@@ -20,7 +20,7 @@ export default function RotatePage() {
     const [previewIndex, setPreviewIndex] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [proLimitModalOpen, setProLimitModalOpen] = useState(false);
-    const [pricingModalOpen, setPricingModalOpen] = useState(false);
+    const [, setPricingModalOpen] = useState(false);
     const [adModal, setAdModal] = useState({ open: false, onComplete: null, fileName: '' });
 
     // Rotate-specific state
@@ -34,7 +34,8 @@ export default function RotatePage() {
     /* ── File handling ── */
     const handleFilesSelected = async (newFiles) => {
         setErrorMessage('');
-        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        const MAX_FILE_SIZE_MB = isPro ? 50 : 10;
+        const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
         const validFiles = [];
         const oversizedFiles = [];
 
@@ -44,7 +45,7 @@ export default function RotatePage() {
         }
 
         if (oversizedFiles.length > 0) {
-            setErrorMessage(`⚠️ "${oversizedFiles.slice(0, 2).join(', ')}" exceeds the 10 MB per file limit.`);
+            setErrorMessage(`⚠️ "${oversizedFiles.slice(0, 2).join(', ')}" exceeds the ${MAX_FILE_SIZE_MB} MB per file limit.`);
             return;
         }
         if (validFiles.length === 0) { setErrorMessage('⚠️ Please upload valid image files.'); return; }

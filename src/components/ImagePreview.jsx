@@ -52,7 +52,7 @@ export default function ImagePreview({ items, currentIndex, onNavigate, onClose,
   };
 
   const resName = processedResult?.file?.name?.toLowerCase() || '';
-  const isPdf  = resName.endsWith('.pdf');
+  const isPdf = resName.endsWith('.pdf');
   const isDocx = resName.endsWith('.docx');
 
   const renderResultPreview = () => {
@@ -87,9 +87,9 @@ export default function ImagePreview({ items, currentIndex, onNavigate, onClose,
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>
             <CheckCircle2 size={15} /> Ready for Download
           </div>
-          <button onClick={() => onDownload(item)} className="btn btn-primary btn-md" style={{ borderRadius: 10, gap: 8, marginTop: 6 }}>
+          {/* <button onClick={() => onDownload(item)} className="btn btn-primary btn-md" style={{ borderRadius: 10, gap: 8, marginTop: 6 }}>
             <Download size={15} /> Download .docx File
-          </button>
+          </button> */}
         </div>
       );
     }

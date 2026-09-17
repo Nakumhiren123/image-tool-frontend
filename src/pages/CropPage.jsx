@@ -1,6 +1,6 @@
 // src/pages/CropPage.jsx
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import UploadArea from '../components/UploadArea';
 import FileCard from '../components/FileCard';
 import CropControls from '../components/controls/CropControls';
@@ -38,7 +38,8 @@ export default function CropPage() {
         const validImageFiles = [];
         const invalidFiles = [];
         const oversizedFiles = [];
-        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+        const MAX_FILE_SIZE_MB = isPro ? 50 : 10;
+        const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
 
         for (const f of newFiles) {
             if (f.size > MAX_FILE_SIZE) {
@@ -52,7 +53,7 @@ export default function CropPage() {
 
         if (oversizedFiles.length > 0) {
             setErrorMessage(
-                `⚠️ File limit exceeded: "${oversizedFiles.slice(0, 2).join(', ')}${oversizedFiles.length > 2 ? '...' : ''}" exceeds the 10 MB per file limit.`
+                `⚠️ File limit exceeded: "${oversizedFiles.slice(0, 2).join(', ')}${oversizedFiles.length > 2 ? '...' : ''}" exceeds the ${MAX_FILE_SIZE_MB} MB per file limit.`
             );
         } else if (invalidFiles.length > 0) {
             setErrorMessage(

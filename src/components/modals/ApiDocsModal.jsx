@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { X, Code2, Terminal, Copy, Check, Zap } from 'lucide-react';
+import { X, Code2, Copy, Check } from 'lucide-react';
+
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
 
 const API_ENDPOINTS = [
   {
     name: 'Image Format Converter',
     path: 'POST /api/convert',
     desc: 'Convert any image file to JPG, PNG, WEBP, AVIF, or GIF format with custom quality ratings.',
-    curl: `curl -X POST "http://localhost:5000/api/convert" \\
+    curl: `curl -X POST "${API_BASE}/convert" \\
   -F "image=@photo.jpg" \\
   -F "format=webp" \\
   -F "quality=80" \\
@@ -16,7 +20,7 @@ formData.append('image', file);
 formData.append('format', 'webp');
 formData.append('quality', '80');
 
-const res = await fetch('http://localhost:5000/api/convert', {
+const res = await fetch('${API_BASE} / convert', {
   method: 'POST',
   body: formData
 });
@@ -26,7 +30,7 @@ const blob = await res.blob();`
     name: 'Target KB Size Compressor',
     path: 'POST /api/compress',
     desc: 'Compress images to an exact target file size in KB using our iterative binary search algorithm.',
-    curl: `curl -X POST "http://localhost:5000/api/compress" \\
+    curl: `curl -X POST "${API_BASE}/compress" \\
   -F "image=@large_photo.jpg" \\
   -F "targetKB=50" \\
   --output compressed_50kb.jpg`,
@@ -34,7 +38,7 @@ const blob = await res.blob();`
 formData.append('image', file);
 formData.append('targetKB', '50');
 
-const res = await fetch('http://localhost:5000/api/compress', {
+const res = await fetch('${API_BASE}/compress', {
   method: 'POST',
   body: formData
 });
@@ -44,7 +48,7 @@ const blob = await res.blob();`
     name: 'Image Dimension Resizer',
     path: 'POST /api/resize',
     desc: 'Resize images by width, height, or percentage scale while maintaining aspect ratio.',
-    curl: `curl -X POST "http://localhost:5000/api/resize" \\
+    curl: `curl -X POST "${API_BASE}/resize" \\
   -F "image=@input.png" \\
   -F "width=800" \\
   -F "height=600" \\
@@ -56,7 +60,7 @@ formData.append('width', '800');
 formData.append('height', '600');
 formData.append('maintainAspect', 'true');
 
-const res = await fetch('http://localhost:5000/api/resize', {
+const res = await fetch('${API_BASE}/resize', {
   method: 'POST',
   body: formData
 });

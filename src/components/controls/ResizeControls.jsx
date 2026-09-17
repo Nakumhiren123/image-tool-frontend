@@ -2,21 +2,21 @@ import React from 'react';
 import { Maximize2, Lock, Unlock, Sliders, Target } from 'lucide-react';
 
 const PRESETS = [
-  { label: 'Full HD',         w: 1920, h: 1080 },
-  { label: '4K',              w: 3840, h: 2160 },
-  { label: 'HD 720p',         w: 1280, h: 720  },
-  { label: 'Instagram 1:1',   w: 1080, h: 1080 },
-  { label: 'Story 9:16',      w: 1080, h: 1920 },
+  { label: 'Full HD', w: 1920, h: 1080 },
+  { label: '4K', w: 3840, h: 2160 },
+  { label: 'HD 720p', w: 1280, h: 720 },
+  { label: 'Instagram 1:1', w: 1080, h: 1080 },
+  { label: 'Story 9:16', w: 1080, h: 1920 },
 ];
 
 const SIZE_PRESETS = [
-  { value: 50,  unit: 'KB' },
+  { value: 50, unit: 'KB' },
   { value: 100, unit: 'KB' },
   { value: 200, unit: 'KB' },
   { value: 500, unit: 'KB' },
-  { value: 1,   unit: 'MB' },
-  { value: 2,   unit: 'MB' },
-  { value: 5,   unit: 'MB' },
+  { value: 1, unit: 'MB' },
+  { value: 2, unit: 'MB' },
+  { value: 5, unit: 'MB' },
 ];
 
 export default function ResizeControls({
@@ -146,8 +146,13 @@ export default function ResizeControls({
                   <button
                     key={`${p.value}-${p.unit}`}
                     onClick={() => {
-                      setTargetFileSize && setTargetFileSize(p.value);
-                      setTargetFileUnit && setTargetFileUnit(p.unit);
+                      if (setTargetFileSize) {
+                        setTargetFileSize(p.value);
+                      }
+
+                      if (setTargetFileUnit) {
+                        setTargetFileUnit(p.unit);
+                      }
                     }}
                     className="btn btn-ghost btn-sm"
                     style={{

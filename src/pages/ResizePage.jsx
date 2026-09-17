@@ -1,6 +1,6 @@
 // src/pages/ResizePage.jsx
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import UploadArea from '../components/UploadArea';
 import FileCard from '../components/FileCard';
 import ResizeControls from '../components/controls/ResizeControls';
@@ -20,7 +20,7 @@ export default function ResizePage() {
     const [previewIndex, setPreviewIndex] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [proLimitModalOpen, setProLimitModalOpen] = useState(false);
-    const [pricingModalOpen, setPricingModalOpen] = useState(false);
+    const [, setPricingModalOpen] = useState(false);
     const [adModal, setAdModal] = useState({ open: false, onComplete: null, fileName: '' });
 
     // Resize-specific state
@@ -37,7 +37,8 @@ export default function ResizePage() {
     /* ── File handling ── */
     const handleFilesSelected = async (newFiles) => {
         setErrorMessage('');
-        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        const MAX_FILE_SIZE_MB = isPro ? 50 : 10;
+        const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
         const validFiles = [];
         const oversizedFiles = [];
 
@@ -47,7 +48,7 @@ export default function ResizePage() {
         }
 
         if (oversizedFiles.length > 0) {
-            setErrorMessage(`⚠️ "${oversizedFiles[0]}" exceeds the 10 MB limit.`);
+            setErrorMessage(`⚠️ "${oversizedFiles[0]}" exceeds the ${MAX_FILE_SIZE_MB} MB limit.`);
             return;
         }
         if (validFiles.length === 0) { setErrorMessage('⚠️ Please upload valid image files.'); return; }
@@ -97,7 +98,7 @@ export default function ResizePage() {
                 let result;
                 if (resizeMode === 'targetSize') {
                     const targetKB = resizeTargetUnit === 'MB' ? resizeTargetSize * 1024 : resizeTargetSize;
-                    result = await compressToTargetSize(item.file, targetKB, '');
+                    result = await compressToTargetSize(item.file, targetKB, 'jpeg');
                 } else {
                     result = await resizeImage(item.file, resizeWidth, resizeHeight, maintainAspect, '');
                 }
@@ -105,7 +106,13 @@ export default function ResizePage() {
             }));
             setItems(updated);
             if (updated[0]?.processedResult) setPreviewIndex(0);
-        } catch (err) { console.error(err); }
+        } catch (err) {
+            console.error(err);
+
+            setErrorMessage(
+                err?.message || 'Image processing failed. Please try again.'
+            );
+        }
         finally { setIsProcessing(false); }
     };
 

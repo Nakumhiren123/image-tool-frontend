@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { X, User, Mail, Lock, UserPlus, LogIn, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 
 const GoogleSignInButton = memo(function GoogleSignInButton({ onSuccess, onError }) {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;

@@ -60,7 +60,7 @@ export default function ConvertersHubPage() {
 
                 {/* ── Feature badges ── */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 36 }}>
-                    {FEATURES.map(({ icon: Icon, label, desc }) => (
+                    {FEATURES.map(({ icon: Icon, label }) => (
                         <div key={label} style={{
                             display: 'flex', alignItems: 'center', gap: 8,
                             padding: '8px 16px', borderRadius: 99,

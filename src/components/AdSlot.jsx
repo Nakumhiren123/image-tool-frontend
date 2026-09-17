@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
+
 
 const AD_SIZES = {
   leaderboard: { w: 728, h: 90, label: '728×90 Leaderboard' },
@@ -124,7 +127,7 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
       if (activeClient && activeSlot && window.adsbygoogle) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
-    } catch (e) { /* silent */ }
+    } catch { /* silent */ }
   }, [activeClient, activeSlot]);
 
   // ── Test / Dev mode: show visual dummy ──
@@ -181,82 +184,3 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
     </div>
   );
 }
-
-// import { useState, useEffect } from 'react';
-
-// const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
-// export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot = null }) {
-
-//   // 1. Hooks first
-//   const [adData, setAdData] = useState(null);
-
-//   useEffect(() => {
-//     fetch(`${API_BASE}/ads`)
-//       .then(res => res.json())
-//       .then(data => {
-//         if (data.success) {
-//           const match = data.ads.find(ad => ad.position === type);
-//           setAdData(match || null);
-//         }
-//       })
-//       .catch(() => setAdData(null));
-//   }, [type]);
-
-//   // 2. Variables
-//   const activeClient = adData?.ad_client || adClient;
-//   const activeSlot = adData?.ad_slot || adSlot;
-
-//   useEffect(() => {
-//     try {
-//       if (activeClient && activeSlot && window.adsbygoogle) {
-//         (window.adsbygoogle = window.adsbygoogle || []).push({});
-//       }
-//     } catch (e) { }
-//   }, [activeClient, activeSlot]);
-
-//   const isLeaderboard = type === 'leaderboard';
-//   const isRectangle = type === 'rectangle';
-//   const isSkyscraper = type === 'skyscraper';
-//   const w = isLeaderboard ? 728 : isRectangle ? 300 : isSkyscraper ? 160 : '100%';
-//   const h = isLeaderboard ? 90 : isRectangle ? 250 : isSkyscraper ? 600 : 120;
-
-//   // 3. Return
-//   if (activeClient && activeSlot) {
-//     return (
-//       <div className="ad-container" style={{ margin: '16px auto', textAlign: 'center', overflow: 'hidden' }}>
-//         <ins
-//           className="adsbygoogle"
-//           style={{ display: 'block' }}
-//           data-ad-client={activeClient}
-//           data-ad-slot={activeSlot}
-//           data-ad-format="auto"
-//           data-full-width-responsive="true"
-//         />
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div style={{
-//       width: '100%', maxWidth: w, height: h,
-//       margin: '0 auto', borderRadius: 12,
-//       border: '1.5px dashed #CBD5E1', background: '#FAFBFD',
-//       display: 'flex', flexDirection: 'column',
-//       alignItems: 'center', justifyContent: 'center',
-//       padding: 10, textAlign: 'center', gap: 4,
-//       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.03)',
-//       flexShrink: 0, boxSizing: 'border-box',
-//     }}>
-//       <span style={{ fontSize: '0.62rem', fontWeight: 800, color: '#94A3B8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-//         ADVERTISEMENT
-//       </span>
-//       <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748B', lineHeight: 1.3 }}>
-//         {isLeaderboard && '728×90 Leaderboard'}
-//         {isRectangle && '300×250 Rectangle'}
-//         {isSkyscraper && '160×600 Skyscraper'}
-//         {!isLeaderboard && !isRectangle && !isSkyscraper && 'Ad Banner'}
-//       </span>
-//     </div>
-//   );
-// }

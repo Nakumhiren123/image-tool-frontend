@@ -1,9 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { UploadCloud, FilePlus, Clipboard, Plus } from 'lucide-react';
+import { useAuth } from '../context/useAuth';
 
 export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles = false, multiple = true }) {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef(null);
+
+  const { isPro } = useAuth();
+  const maxUploadMB = isPro ? 50 : 10;
 
   const handleDragOver = (e) => { e.preventDefault(); setIsDragOver(true); };
   const handleDragLeave = (e) => { e.preventDefault(); setIsDragOver(false); };
@@ -75,7 +79,11 @@ export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles 
         {title || defaultTitle}
       </h3>
       <p style={{ fontSize: '0.82rem', color: 'var(--text-3)', marginBottom: hasFiles ? 16 : 24 }}>
-        {subtitle || (hasFiles ? 'Drop additional images here or click to browse' : 'Supports JPG, PNG, WEBP, GIF, HEIC (iPhone), AVIF, BMP — up to 10 MB per file')}
+        {subtitle || (
+          hasFiles
+            ? 'Drop additional images here or click to browse'
+            : `Supports JPG, PNG, WEBP, GIF, HEIC (iPhone), AVIF, BMP — up to ${maxUploadMB} MB per file`
+        )}
       </p>
 
       {/* CTA button */}

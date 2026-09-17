@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { X, Check, Crown, Sparkles, ShieldCheck, Calendar, ArrowRight, Zap, RefreshCw } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { X, Check, Crown, Sparkles } from 'lucide-react';
+import { useAuth } from '../../context/useAuth';
+import { csrfFetch } from '../../services/csrf';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
+
 
 export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
-  const { user, updateSubscription } = useAuth();
+  const { user } = useAuth();
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'yearly'
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingPlan, setProcessingPlan] = useState(null);
@@ -16,16 +20,16 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
   /**
    * Loads the Razorpay checkout script dynamically (only once).
    */
-  const loadRazorpayScript = () =>
-    new Promise((resolve) => {
-      if (document.getElementById('razorpay-script')) return resolve(true);
-      const script = document.createElement('script');
-      script.id = 'razorpay-script';
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
+  // const loadRazorpayScript = () =>
+  //   new Promise((resolve) => {
+  //     if (document.getElementById('razorpay-script')) return resolve(true);
+  //     const script = document.createElement('script');
+  //     script.id = 'razorpay-script';
+  //     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+  //     script.onload = () => resolve(true);
+  //     script.onerror = () => resolve(false);
+  //     document.body.appendChild(script);
+  //   });
 
   /**
    * Handles Subscription Purchase by redirecting full-page to Razorpay Hosted Gateway
@@ -42,12 +46,13 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
 
     try {
       // 1. Create Razorpay order on backend with selected plan
-      const orderRes = await fetch(`${API_BASE}/payment/create-order`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ plan: planId }),
-      });
+      const orderRes = await csrfFetch(
+        `${API_BASE}/payment/create-order`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: planId }),
+        });
       const orderData = await orderRes.json();
 
       if (!orderData.success) {
@@ -199,7 +204,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                 Monthly or Yearly Plans • Cancel Anytime
               </h2>
               <p style={{ fontSize: '0.82rem', color: '#94A3B8', marginTop: 2 }}>
-                Unlock batch processing (100+ images), 500 MB uploads, target KB precision, and 100% ad-free experience.
+                Unlock premium processing features, target KB precision, and a 100% ad-free experience.
               </p>
 
               {/* ── Billing Cycle Selector ── */}
@@ -289,7 +294,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, borderTop: '1px solid #F1F5F9', paddingTop: 12 }}>
-                      {['5 Images per batch limit', '50 MB Max upload size', 'Standard processing speed', 'Banner Ads enabled', 'Basic export formats'].map((f) => (
+                      {['5 Images per batch limit', '10 MB Max upload size', 'Standard processing speed', 'Banner Ads enabled', 'Basic export formats'].map((f) => (
                         <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           <Check size={13} color="#94A3B8" />
                           <span style={{ fontSize: '0.76rem', color: '#64748B' }}>{f}</span>
@@ -344,10 +349,10 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, borderTop: '1px solid #E2E8F0', paddingTop: 12 }}>
                       {[
-                        'Unlimited Images (100+ batch)',
-                        '500 MB Max upload size',
+                        '50 MB Max upload size',
+                        'Premium processing features',
                         '100% Ad-Free Clean Workspace',
-                        '10x Faster Sharp Engine',
+                        'Enhanced image processing',
                         'Target KB Precision Search',
                         'All Passport & Exam Presets',
                         'Unlimited Watermark Presets',
@@ -408,8 +413,8 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                         'Everything in Monthly Plan',
                         '365 Days Access',
                         'Priority 10x Sharp Engine',
-                        'Unlimited Images (100+ batch)',
-                        '500 MB Max upload size',
+                        '50 MB Max upload size',
+                        'Premium processing features',
                         '100% Ad-Free Clean Workspace',
                         'Target KB Precision Search',
                         'All Passport & Exam Presets',

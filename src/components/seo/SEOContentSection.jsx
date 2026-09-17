@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, Zap, ShieldCheck, Target, Layers, FileImage, Sparkles } from 'lucide-react';
+import {
+  HelpCircle,
+  ChevronDown,
+  ShieldCheck,
+  Target,
+  FileImage,
+  Sparkles
+} from 'lucide-react';
 
 const FAQS = [
   {
@@ -8,11 +15,11 @@ const FAQS = [
   },
   {
     q: 'Is it safe to upload sensitive documents and private photos to PicCraft?',
-    a: 'Yes, 100% safe! All processed images are handled in transient memory or isolated output directories and are automatically deleted immediately after download. We do not store, view, or share any user files.'
+    a: "Images are processed locally in the browser when supported, or through protected server-side processing for operations that require the backend. Processed server-side files are handled as temporary data and are removed according to the application's cleanup and retention controls. We do not intentionally retain, view, or share user image files."
   },
   {
     q: 'Can I convert Apple HEIC photos to JPG or PNG?',
-    a: 'Yes! PicCraft supports client-side HEIC to JPG and HEIC to PNG conversion directly in your web browser. You can convert iPhone photos without losing image quality.'
+    a: 'Yes! PicCraft supports client-side HEIC to JPG and HEIC to PNG conversion directly in your web browser. You can convert supported iPhone HEIC photos directly in your browser. Output quality depends on the selected format and processing settings.'
   },
   {
     q: 'What formats can I convert my images to?',
@@ -106,7 +113,7 @@ export default function SEOContentSection() {
               Target KB Precision Search
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.5 }}>
-              Specify exact KB limits for government exams, visa forms, or web uploads. Our C++ libvips Sharp engine automatically finds the optimal quality match.
+              Specify exact KB limits for government exams, visa forms, or web uploads. Our image processing engine automatically finds an optimized result for your target size.
             </p>
           </div>
 
@@ -118,7 +125,7 @@ export default function SEOContentSection() {
               Universal Format Conversion
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.5 }}>
-              Convert between JPG, PNG, WEBP, AVIF, and iPhone HEIC formats. Preserve transparency, adjust background colors, and export batch ZIPs in seconds.
+              Convert between JPG, PNG, WEBP, AVIF, and supported iPhone HEIC formats with convenient browser-based processing.
             </p>
           </div>
 
@@ -127,10 +134,10 @@ export default function SEOContentSection() {
               <ShieldCheck size={24} color="#9333EA" />
             </div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>
-              100% Secure & Private
+              Privacy-Focused Processing
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.5 }}>
-              Your privacy is guaranteed. Heavy operations happen locally or in transient server memory with instant auto-purge upon file download.
+              Images are processed locally in the browser when supported, or through protected server-side processing for operations that require the backend. We do not intentionally retain processed image files after processing.
             </p>
           </div>
 
@@ -139,7 +146,7 @@ export default function SEOContentSection() {
         {/* ── How-To Guide Section (Structured Data Target) ── */}
         <div style={{ background: '#FFFFFF', padding: 36, borderRadius: 20, border: '1px solid #E2E8F0', marginBottom: 56 }}>
           <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0F172A', marginBottom: 20, textAlign: 'center' }}>
-            How to Convert & Compress Images in 3 Simple Steps
+            How to Compress an Image to a Target KB Size
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
             <div style={{ padding: 16, background: '#F8FAFC', borderRadius: 12, border: '1px solid #F1F5F9' }}>

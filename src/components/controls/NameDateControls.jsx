@@ -3,14 +3,14 @@ import { UserCheck, Calendar, Palette, Type } from 'lucide-react';
 
 const FONT_FAMILIES = [
   { label: 'Sans-Serif', val: 'sans-serif' },
-  { label: 'Serif',      val: 'serif'      },
-  { label: 'Monospace',  val: 'monospace'  },
-  { label: 'Impact',     val: 'Impact'     },
+  { label: 'Serif', val: 'serif' },
+  { label: 'Monospace', val: 'monospace' },
+  { label: 'Impact', val: 'Impact' },
 ];
 
 export default function NameDateControls({ nameDateConfig, setNameDateConfig }) {
   const {
-    name, date, datePrefix, bannerBg, nameColor, dateColor, bannerRatio,
+    name, date, datePrefix, nameColor, dateColor, bannerRatio,
     fontFamily = 'sans-serif',
     fontWeight = 'bold',
     customFontSize = 0,

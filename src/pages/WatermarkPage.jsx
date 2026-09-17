@@ -1,6 +1,6 @@
 // src/pages/WatermarkPage.jsx
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import UploadArea from '../components/UploadArea';
 import FileCard from '../components/FileCard';
 import WatermarkControls from '../components/controls/WatermarkControls';
@@ -20,7 +20,7 @@ export default function WatermarkPage() {
     const [previewIndex, setPreviewIndex] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [proLimitModalOpen, setProLimitModalOpen] = useState(false);
-    const [pricingModalOpen, setPricingModalOpen] = useState(false);
+    const [, setPricingModalOpen] = useState(false);
     const [adModal, setAdModal] = useState({ open: false, onComplete: null, fileName: '' });
 
     // Watermark-specific state — exact from original App.jsx
@@ -40,7 +40,8 @@ export default function WatermarkPage() {
     /* ── File handling ── */
     const handleFilesSelected = async (newFiles) => {
         setErrorMessage('');
-        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        const MAX_FILE_SIZE_MB = isPro ? 50 : 10;
+        const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
         const validFiles = [];
         const oversizedFiles = [];
 
@@ -50,7 +51,7 @@ export default function WatermarkPage() {
         }
 
         if (oversizedFiles.length > 0) {
-            setErrorMessage(`⚠️ "${oversizedFiles.slice(0, 2).join(', ')}" exceeds the 10 MB per file limit.`);
+            setErrorMessage(`⚠️ "${oversizedFiles[0]}" exceeds the ${MAX_FILE_SIZE_MB} MB limit.`);
             return;
         }
         if (validFiles.length === 0) { setErrorMessage('⚠️ Please upload valid image files.'); return; }

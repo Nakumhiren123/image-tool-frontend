@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { X, Users, Crown, Shield, Zap, Search, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { X, Shield, Search, RefreshCw, AlertCircle } from 'lucide-react';
+import { useAuth } from '../../context/useAuth';
+import { csrfFetch } from '../../services/csrf';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
 
 export default function AdminPanelModal({ isOpen, onClose }) {
   const { user } = useAuth();
@@ -49,7 +52,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
   const handleUpdatePlan = async (userId, newPlan, days) => {
     setActionMessage('');
     try {
-      const res = await fetch(`${API_BASE}/admin/users/update-plan`, {
+      const res = await csrfFetch(`${API_BASE}/admin/users/update-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -62,7 +65,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
       } else {
         alert(data.error || 'Action failed');
       }
-    } catch (e) {
+    } catch {
       alert('Error updating user plan');
     }
   };
@@ -70,7 +73,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
   const handleToggleAdmin = async (userId, currentIsAdmin) => {
     setActionMessage('');
     try {
-      const res = await fetch(`${API_BASE}/admin/users/toggle-admin`, {
+      const res = await csrfFetch(`${API_BASE}/admin/users/toggle-admin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -83,13 +86,13 @@ export default function AdminPanelModal({ isOpen, onClose }) {
       } else {
         alert(data.error || 'Action failed');
       }
-    } catch (e) {
+    } catch {
       alert('Error updating admin role');
     }
   };
 
   const handleCreateAd = async () => {
-    const res = await fetch(`${API_BASE}/admin/ads`, {
+    const res = await csrfFetch(`${API_BASE}/admin/ads`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -104,7 +107,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
   };
 
   const handleUpdateAd = async () => {
-    const res = await fetch(`${API_BASE}/admin/ads/${editingAd.id}`, {
+    const res = await csrfFetch(`${API_BASE}/admin/ads/${editingAd.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -121,7 +124,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
 
   const handleDeleteAd = async (id) => {
     if (!confirm('Delete this ad?')) return;
-    const res = await fetch(`${API_BASE}/admin/ads/${id}`, {
+    const res = await csrfFetch(`${API_BASE}/admin/ads/${id}`, {
       method: 'DELETE',
       credentials: 'include',
     });
@@ -130,7 +133,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
   };
 
   const handleToggleAdStatus = async (id) => {
-    const res = await fetch(`${API_BASE}/admin/ads/${id}/toggle`, {
+    const res = await csrfFetch(`${API_BASE}/admin/ads/${id}/toggle`, {
       method: 'POST',
       credentials: 'include',
     });

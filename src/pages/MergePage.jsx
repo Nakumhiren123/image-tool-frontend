@@ -190,10 +190,9 @@ export default function MergePage() {
 
             {/* ── Two-column workspace ── */}
             <div
-                className="workspace-grid"
+                className={`workspace-grid ${items.length ? 'workspace-has-panel' : ''}`}
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: items.length ? '1fr 380px' : '1fr',
                     gap: 24,
                     alignItems: 'start',
                     transition: 'grid-template-columns 0.3s ease',

@@ -1537,3 +1537,25 @@ input[type="range"]::-webkit-slider-thumb:hover {
     max-width: 100%;
   }
 }
+
+.workspace-grid {
+  grid-template-columns: 1fr;
+}
+
+.workspace-has-panel {
+  grid-template-columns: 1fr 380px;
+}
+
+@media (max-width: 1279px) {
+  .workspace-has-panel {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 360px) {
+
+  /* Tighten ad modal padding on tiny phones */
+  .modal-panel {
+    padding: 12px !important;
+  }
+}

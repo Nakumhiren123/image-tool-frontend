@@ -168,7 +168,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
       <div
         className="modal-panel animate-in"
         style={{
-          maxWidth: 960, borderRadius: 24, padding: 0, overflow: 'hidden',
+          maxWidth: 960, width: '100%', borderRadius: 24, padding: 0, overflow: 'hidden',
           display: 'flex', flexDirection: 'column', maxHeight: '92vh',
         }}
         onClick={(e) => e.stopPropagation()}
@@ -214,7 +214,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
           {/* Stats Bar */}
           {stats && (
             <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginTop: 18,
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginTop: 18,
             }}>
               <div style={{ padding: '10px 14px', borderRadius: 12, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700 }}>Total Users</span>
@@ -398,7 +398,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
             {/* Ad Form */}
             <div style={{ background: '#F8FAFC', borderRadius: 12, padding: 20, marginBottom: 24, border: '1px solid #E2E8F0' }}>
               <h3 style={{ fontWeight: 800, marginBottom: 14 }}>{editingAd ? '✏️ Edit Ad' : '➕ Add New Ad'}</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 10 }}>
                 <input
                   placeholder="Ad Title"
                   value={adForm.title}

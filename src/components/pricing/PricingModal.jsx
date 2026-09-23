@@ -114,6 +114,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
         className="modal-panel animate-in"
         style={{
           maxWidth: 820,
+          width: '100%',
           borderRadius: 24,
           padding: 0,
           overflow: 'hidden',
@@ -140,7 +141,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
             </p>
 
             <div style={{
-              maxWidth: 380, margin: '0 auto 28px', padding: 20, borderRadius: 16,
+              maxWidth: 'min(380px, 100%)', margin: '0 auto 28px', padding: 20, borderRadius: 16,
               background: '#F8FAFC', border: '1px solid #E2E8F0', textAlign: 'left',
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>

@@ -33,7 +33,7 @@ const GoogleSignInButton = memo(function GoogleSignInButton({ onSuccess, onError
       size="large"
       shape="pill"
       text="continue_with"
-      width="380"
+      width={String(Math.min(380, window.innerWidth - 80))}
     />
   );
 });

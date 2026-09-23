@@ -77,7 +77,7 @@ function ConvertDropdown({ onClose, triggerRef, dropdownPortalRef }) {
       left: position.left,
       transform: 'translateX(-50%)',
       width: 'min(680px, calc(100vw - 32px))',
-      maxHeight: '70vh',
+      maxHeight: 'min(70dvh, 480px)',
       overflowY: 'auto',
       background: '#fff',
       borderRadius: 16,

@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { getConverterSEO } from '../../config/converters';
 
-const BASE_URL = 'https://piccraft.app';
+const BASE_URL = 'https://image-tool-frontend.vercel.app';
 
 const SEO_PRESETS = {
   default: {

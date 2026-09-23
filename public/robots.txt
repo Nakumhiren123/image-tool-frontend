@@ -7,4 +7,4 @@ Disallow: /api/admin/
 Disallow: /api/auth/
 
 # Link to XML Sitemap
-Sitemap: https://piccraft.app/sitemap.xml
+Sitemap: https://image-tool-frontend.vercel.app/sitemap.xml

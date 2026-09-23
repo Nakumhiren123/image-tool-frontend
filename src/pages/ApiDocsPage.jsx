@@ -13,7 +13,7 @@ const API_ENDPOINTS = [
             { name: 'format', type: 'string', required: true, desc: 'Target format: jpg | png | webp | avif | gif | bmp | ico | pdf' },
             { name: 'quality', type: 'number', required: false, desc: 'Output quality 1–100 (default: 85). Applies to JPG/WEBP/AVIF.' },
         ],
-        curl: `curl -X POST "https://api.piccraft.app/api/convert" \\
+        curl: `curl -X POST "https://image-tool-backend.vercel.app/api/convert" \\
   -F "image=@photo.jpg" \\
   -F "format=webp" \\
   -F "quality=80" \\
@@ -23,7 +23,7 @@ formData.append('image', file);
 formData.append('format', 'webp');
 formData.append('quality', '80');
 
-const res = await fetch('https://api.piccraft.app/api/convert', {
+const res = await fetch('https://image-tool-backend.vercel.app/api/convert', {
   method: 'POST',
   body: formData
 });
@@ -39,7 +39,7 @@ const blob = await res.blob();
             { name: 'image', type: 'File', required: true, desc: 'The image file to compress.' },
             { name: 'targetKB', type: 'number', required: true, desc: 'Target output size in kilobytes (e.g. 50 for 50KB).' },
         ],
-        curl: `curl -X POST "https://api.piccraft.app/api/compress" \\
+        curl: `curl -X POST "https://image-tool-backend.vercel.app/api/compress" \\
   -F "image=@large_photo.jpg" \\
   -F "targetKB=50" \\
   --output compressed_50kb.jpg`,
@@ -47,7 +47,7 @@ const blob = await res.blob();
 formData.append('image', file);
 formData.append('targetKB', '50');
 
-const res = await fetch('https://api.piccraft.app/api/compress', {
+const res = await fetch('https://image-tool-backend.vercel.app/api/compress', {
   method: 'POST',
   body: formData
 });
@@ -64,7 +64,7 @@ const blob = await res.blob();`,
             { name: 'height', type: 'number', required: false, desc: 'Target height in pixels.' },
             { name: 'maintainAspect', type: 'boolean', required: false, desc: 'Preserve aspect ratio (default: true).' },
         ],
-        curl: `curl -X POST "https://api.piccraft.app/api/resize" \\
+        curl: `curl -X POST "https://image-tool-backend.vercel.app/api/resize" \\
   -F "image=@input.png" \\
   -F "width=800" \\
   -F "height=600" \\
@@ -76,7 +76,7 @@ formData.append('width', '800');
 formData.append('height', '600');
 formData.append('maintainAspect', 'true');
 
-const res = await fetch('https://api.piccraft.app/api/resize', {
+const res = await fetch('https://image-tool-backend.vercel.app/api/resize', {
   method: 'POST',
   body: formData
 });
@@ -154,7 +154,7 @@ export default function ApiDocsPage() {
                 {/* Quick info boxes */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 40 }}>
                     {[
-                        { icon: <Zap size={18} color="#F59E0B" />, label: 'Base URL', value: 'https://api.piccraft.app' },
+                        { icon: <Zap size={18} color="#F59E0B" />, label: 'Base URL', value: 'https://image-tool-backend.vercel.app' },
                         {
                             icon: <Key size={18} color="#6366F1" />,
                             label: 'Authentication',

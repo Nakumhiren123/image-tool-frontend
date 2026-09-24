@@ -101,6 +101,7 @@ export default function CompressPage() {
     };
 
     const handleRemoveItem = (id) => {
+        setActivePreviewIndex(0);
         setItems((prev) => {
             const item = prev.find(i => i.id === id);
             if (item) {
@@ -112,6 +113,7 @@ export default function CompressPage() {
     };
 
     const handleClearAll = () => {
+        setActivePreviewIndex(0);
         items.forEach(i => {
             URL.revokeObjectURL(i.previewUrl);
             if (i.processedResult?.url) URL.revokeObjectURL(i.processedResult.url);
@@ -181,7 +183,8 @@ export default function CompressPage() {
         }
     };
 
-    const firstItem = items[0];
+    const [activePreviewIndex, setActivePreviewIndex] = useState(0);
+    const firstItem = items[activePreviewIndex] || items[0];
     const processedCount = items.filter(i => i.processedResult).length;
 
     return (
@@ -399,8 +402,10 @@ export default function CompressPage() {
                                     <FileCard
                                         key={item.id}
                                         item={item}
+                                        isActive={items.indexOf(item) === activePreviewIndex}
                                         onRemove={handleRemoveItem}
                                         onPreview={(item) => setPreviewIndex(items.indexOf(item))}
+                                        onCardClick={(item) => setActivePreviewIndex(items.indexOf(item))}
                                         onDownloadSingle={handleDownloadSingle}
                                         isProcessing={isProcessing}
                                     />
@@ -473,6 +478,7 @@ export default function CompressPage() {
                     onNavigate={setPreviewIndex}
                     onClose={() => setPreviewIndex(null)}
                     onDownload={handleDownloadSingle}
+                    onDownloadAll={handleDownloadZip}
                 />
             )}
 

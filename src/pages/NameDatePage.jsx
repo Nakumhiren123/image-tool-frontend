@@ -222,7 +222,16 @@ export default function NameDatePage() {
                 </div>
             )}
 
-            {previewIndex !== null && <ImagePreview items={items} currentIndex={previewIndex} onNavigate={setPreviewIndex} onClose={() => setPreviewIndex(null)} onDownload={handleDownloadSingle} />}
+            {previewIndex !== null && (
+                <ImagePreview
+                    items={items}
+                    currentIndex={previewIndex}
+                    onNavigate={setPreviewIndex}
+                    onClose={() => setPreviewIndex(null)}
+                    onDownload={handleDownloadSingle}
+                    onDownloadAll={handleDownloadZip}
+                />
+            )}
 
             <AdInterstitialModal
                 isOpen={adModal.open}

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  X, Download, Columns2, AlignVerticalSpaceAround,
+  X, Download, Archive, Columns2, AlignVerticalSpaceAround,
   FileText, CheckCircle2, Sparkles, Image as ImageIcon,
   ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import { formatBytes } from '../lib/imageEngine';
 
-export default function ImagePreview({ items, currentIndex, onNavigate, onClose, onDownload }) {
+export default function ImagePreview({ items, currentIndex, onNavigate, onClose, onDownload, onDownloadAll }) {
   const [sideBySide, setSideBySide] = useState(false);
-
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const item = items?.[currentIndex];
 
 
@@ -225,14 +225,56 @@ export default function ImagePreview({ items, currentIndex, onNavigate, onClose,
             )}
 
             {processedResult && (
-              <button
-                onClick={() => onDownload(item)}
-                className="btn btn-success btn-md"
-                style={{ padding: '9px 20px', fontSize: '0.88rem', gap: 8, borderRadius: 10 }}
-              >
-                <Download size={15} />
-                Download {isPdf ? 'PDF' : isDocx ? 'DOCX' : 'Processed Image'}
-              </button>
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => totalProcessed > 1 ? setShowDownloadMenu(v => !v) : onDownload(item)}
+                  className="btn btn-success btn-md"
+                  style={{ padding: '9px 20px', fontSize: '0.88rem', gap: 8, borderRadius: 10 }}
+                >
+                  <Download size={15} />
+                  Download {isPdf ? 'PDF' : isDocx ? 'DOCX' : 'Image'}
+                  {totalProcessed > 1 && <span style={{ marginLeft: 2 }}>▲</span>}
+                </button>
+
+                {showDownloadMenu && totalProcessed > 1 && (
+                  <div style={{
+                    position: 'absolute', bottom: '110%', right: 0,
+                    background: '#fff', border: '1px solid #E2E8F0',
+                    borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                    overflow: 'hidden', minWidth: 220, zIndex: 100,
+                  }}>
+                    <button
+                      onClick={() => { onDownload(item); setShowDownloadMenu(false); }}
+                      style={{
+                        width: '100%', padding: '12px 16px', textAlign: 'left',
+                        background: 'transparent', border: 'none', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        fontSize: '0.85rem', fontWeight: 700, color: '#0F172A',
+                        borderBottom: '1px solid #F1F5F9',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Download size={14} color="#059669" />
+                      Download This Image
+                    </button>
+                    <button
+                      onClick={() => { onDownloadAll?.(); setShowDownloadMenu(false); }}
+                      style={{
+                        width: '100%', padding: '12px 16px', textAlign: 'left',
+                        background: 'transparent', border: 'none', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        fontSize: '0.85rem', fontWeight: 700, color: '#0F172A',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Archive size={14} color="#3B82F6" />
+                      Download All {totalProcessed} as ZIP
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

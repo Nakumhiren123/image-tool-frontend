@@ -121,12 +121,12 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onSu
     <div className="modal-backdrop" onClick={onClose}>
       <div
         className="modal-panel animate-in"
-        style={{ maxWidth: 440, borderRadius: 20, padding: 0, overflow: 'hidden' }}
+        style={{ maxWidth: 440, borderRadius: 20, padding: 0, overflow: 'visible', display: 'flex', flexDirection: 'column', maxHeight: '92vh' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Strip */}
-        <div style={{
-          padding: '24px 28px 16px',
+        <div className="auth-header" style={{
+          padding: '16px 20px 12px',
           background: 'linear-gradient(135deg, #FAFBFD, #EFF6FF)',
           borderBottom: '1px solid #E2E8F0',
           display: 'flex',
@@ -161,7 +161,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onSu
         </div>
 
         {/* Tab Switcher */}
-        <div style={{ padding: '16px 28px 0' }}>
+        {/* <div style={{ padding: '16px 28px 0' }}>
           <div style={{
             display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4,
             padding: 4, background: '#F1F5F9', borderRadius: 12, border: '1px solid #E2E8F0',
@@ -196,10 +196,21 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onSu
               Sign Up
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Form Body */}
-        <div style={{ padding: '20px 28px 28px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="auth-body" style={{ padding: '16px 28px 28px', display: 'flex', flexDirection: 'column', gap: 14, overflowY: 'auto', flex: 1 }}>
+
+          {/* Tab Switcher */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, padding: 4, background: '#F1F5F9', borderRadius: 12, border: '1px solid #E2E8F0', marginBottom: 4 }}>
+            <button type="button" onClick={() => { setMode('login'); setError(''); setSuccess(''); }} style={{ padding: '8px', borderRadius: 9, fontSize: '0.85rem', fontWeight: 700, border: 'none', cursor: 'pointer', transition: 'all 0.18s', background: mode === 'login' ? '#fff' : 'transparent', color: mode === 'login' ? '#1D4ED8' : '#64748B', boxShadow: mode === 'login' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none' }}>
+              <LogIn size={13} style={{ display: 'inline', marginRight: 6 }} /> Sign In
+            </button>
+            <button type="button" onClick={() => { setMode('register'); setError(''); setSuccess(''); }} style={{ padding: '8px', borderRadius: 9, fontSize: '0.85rem', fontWeight: 700, border: 'none', cursor: 'pointer', transition: 'all 0.18s', background: mode === 'register' ? '#fff' : 'transparent', color: mode === 'register' ? '#1D4ED8' : '#64748B', boxShadow: mode === 'register' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none' }}>
+              <UserPlus size={13} style={{ display: 'inline', marginRight: 6 }} /> Sign Up
+            </button>
+          </div>
+
           {error && (
             <div style={{
               padding: '10px 14px', borderRadius: 10, background: '#FEF2F2',

@@ -489,6 +489,7 @@ export default function CropPage() {
                     onNavigate={setPreviewIndex}
                     onClose={() => setPreviewIndex(null)}
                     onDownload={handleDownloadSingle}
+                    onDownloadAll={handleDownloadZip}
                 />
             )}
 

@@ -1,5 +1,6 @@
 // src/pages/ConverterPage.jsx
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import UploadArea from '../components/UploadArea';
 import FileCard from '../components/FileCard';
@@ -32,18 +33,31 @@ export default function ConverterPage({ from, to }) {
     const [pricingModalOpen, setPricingModalOpen] = useState(false);
 
     // When route changes (e.g. /jpg-to-png → /png-to-jpg), sync the format
+    const location = useLocation();
     const prevRouteRef = React.useRef(`${from}-${to}`);
     React.useEffect(() => {
         const currentRoute = `${from}-${to}`;
+        const keepItems = location.state?.keepItems;
         if (prevRouteRef.current !== currentRoute) {
-            // Only clear files when the URL route actually changes
-            setItems([]);
-            setPreviewIndex(null);
-            setErrorMessage('');
+            if (!keepItems) {
+                // Real route change (not format switch) — clear files
+                setItems([]);
+                setPreviewIndex(null);
+                setErrorMessage('');
+            } else {
+                // Format switch — keep files, just reset processed results
+                setItems(prev => prev.map(item => ({
+                    ...item,
+                    status: 'idle',
+                    processedResult: null,
+                })));
+                setPreviewIndex(null);
+                setErrorMessage('');
+            }
             prevRouteRef.current = currentRoute;
         }
         if (to) setConvertFormat(to);
-    }, [from, to]);
+    }, [from, to, location.state]);
 
     // Page title and subtitle
     const toolTitle = from && to
@@ -158,6 +172,7 @@ export default function ConverterPage({ from, to }) {
     };
 
     const handleClearAll = () => {
+        setActivePreviewIndex(0);
         items.forEach(i => {
             URL.revokeObjectURL(i.previewUrl);
             if (i.processedResult?.url) URL.revokeObjectURL(i.processedResult.url);
@@ -221,7 +236,8 @@ export default function ConverterPage({ from, to }) {
     };
 
     const processedCount = items.filter(i => i.processedResult).length;
-    const firstItem = items[0];
+    const [activePreviewIndex, setActivePreviewIndex] = useState(0);
+    const firstItem = items[activePreviewIndex] ?? items[0];
 
     return (
         <main className="main-content" style={{ flex: 1, maxWidth: 1280, margin: '0 auto', width: '100%', padding: '40px 24px' }}>
@@ -314,8 +330,10 @@ export default function ConverterPage({ from, to }) {
                                     <FileCard
                                         key={item.id}
                                         item={item}
+                                        isActive={items.indexOf(item) === activePreviewIndex}
                                         onRemove={handleRemoveItem}
                                         onPreview={() => setPreviewIndex(items.indexOf(item))}
+                                        onCardClick={(item) => setActivePreviewIndex(items.indexOf(item))}
                                         onDownloadSingle={handleDownloadSingle}
                                         isProcessing={isProcessing}
                                     />
@@ -367,6 +385,7 @@ export default function ConverterPage({ from, to }) {
                     onNavigate={setPreviewIndex}
                     onClose={() => setPreviewIndex(null)}
                     onDownload={handleDownloadSingle}
+                    onDownloadAll={handleDownloadZip}
                 />
             )}
 

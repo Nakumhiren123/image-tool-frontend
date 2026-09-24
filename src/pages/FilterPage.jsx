@@ -475,6 +475,7 @@ export default function FilterPage() {
                     onNavigate={setPreviewIndex}
                     onClose={() => setPreviewIndex(null)}
                     onDownload={handleDownloadSingle}
+                    onDownloadAll={handleDownloadZip}
                 />
             )}
 

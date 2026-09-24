@@ -117,7 +117,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
           width: '100%',
           borderRadius: 24,
           padding: 0,
-          overflow: 'hidden',
+          overflow: 'visible',
           display: 'flex',
           flexDirection: 'column',
           maxHeight: '92vh',
@@ -216,7 +216,10 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                 <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#94A3B8' }}>Billing:</span>
 
                 <button
-                  onClick={() => setBillingCycle('monthly')}
+                  onClick={() => {
+                    setBillingCycle('monthly');
+                    document.getElementById('plan-monthly')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
                   style={{
                     padding: '7px 16px', borderRadius: 10, border: 'none',
                     fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', transition: 'all 0.18s',
@@ -229,7 +232,10 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                 </button>
 
                 <button
-                  onClick={() => setBillingCycle('yearly')}
+                  onClick={() => {
+                    setBillingCycle('yearly');
+                    document.getElementById('plan-yearly')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
                   style={{
                     padding: '7px 16px', borderRadius: 10, border: 'none',
                     fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', transition: 'all 0.18s',
@@ -273,7 +279,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
 
             {/* ── Pricing Cards Body ── */}
             <div style={{ padding: '24px 32px 32px', background: '#FFFFFF', overflowY: 'auto', flex: 1 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
 
                 {/* Card 1: FREE Plan */}
                 <div style={{
@@ -314,7 +320,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                 </div>
 
                 {/* Card 2: PRO MONTHLY Plan */}
-                <div style={{
+                <div id="plan-monthly" style={{
                   padding: 20, borderRadius: 18,
                   border: billingCycle === 'monthly' ? '2px solid #3B82F6' : '1px solid #E2E8F0',
                   background: billingCycle === 'monthly' ? '#F0F7FF' : '#FFFFFF',
@@ -377,7 +383,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                 </div>
 
                 {/* Card 3: PRO YEARLY Plan */}
-                <div style={{
+                <div id="plan-yearly" style={{
                   padding: 20, borderRadius: 18,
                   border: billingCycle === 'yearly' ? '2px solid #10B981' : '1px solid #E2E8F0',
                   background: billingCycle === 'yearly' ? '#ECFDF5' : '#FFFFFF',

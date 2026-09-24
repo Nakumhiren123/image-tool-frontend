@@ -2,7 +2,7 @@ import React from 'react';
 import { Trash2, Eye, Download, ArrowRight, RefreshCw, FileText, Film } from 'lucide-react';
 import { formatBytes } from '../lib/imageEngine';
 
-export default function FileCard({ item, onRemove, onPreview, onDownloadSingle, isProcessing }) {
+export default function FileCard({ item, onRemove, onPreview, onCardClick, onDownloadSingle, isProcessing, isActive }) {
   const { file, previewUrl, processedResult, status } = item;
   const origSize = file?.size || 0;
   const newSize = processedResult?.size || 0;
@@ -20,7 +20,11 @@ export default function FileCard({ item, onRemove, onPreview, onDownloadSingle, 
   const isGif = file?.type === 'image/gif' || origName.endsWith('.gif') || resName.endsWith('.gif');
 
   return (
-    <div className="file-card animate-in">
+    <div
+      className="file-card animate-in"
+      onClick={() => onCardClick?.(item)}
+      style={{ cursor: 'pointer', outline: isActive ? '2px solid var(--primary)' : 'none', borderRadius: 12 }}
+    >
       {/* Thumbnail */}
       <div className="file-thumb" style={{ position: 'relative' }}>
         {isPdf ? (

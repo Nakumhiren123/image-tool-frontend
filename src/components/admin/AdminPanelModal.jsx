@@ -168,7 +168,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
       <div
         className="modal-panel animate-in"
         style={{
-          maxWidth: 960, width: '100%', borderRadius: 24, padding: 0, overflow: 'hidden',
+          maxWidth: 960, width: '100%', borderRadius: 24, padding: 0, overflow: 'visible',
           display: 'flex', flexDirection: 'column', maxHeight: '92vh',
         }}
         onClick={(e) => e.stopPropagation()}

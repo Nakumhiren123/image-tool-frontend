@@ -42,15 +42,12 @@ export default function ConvertOptions({
 
   const handleFormatChange = (newFormat) => {
     if (from) {
-      // ── Route-based converter: redirect to new slug ──
-      // e.g. on /jpg-to-png, user picks WEBP → navigate to /jpg-to-webp
-      navigate(`/${from}-to-${newFormat}`);
+      // Pass current items through navigation state so ConverterPage can restore them
+      navigate(`/${from}-to-${newFormat}`, { state: { keepItems: true } });
     } else {
-      // ── Generic /convert page: just update local state ──
       setFormat(newFormat);
     }
   };
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 

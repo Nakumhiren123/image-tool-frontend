@@ -90,7 +90,7 @@ export default function ApiDocsModal({ isOpen, onClose }) {
         className="modal-panel animate-in"
         style={{
           maxWidth: 740, width: '100%', borderRadius: 24, background: '#FFFFFF',
-          padding: 0, overflow: 'hidden', maxHeight: '90vh', display: 'flex',
+          padding: 0, overflow: 'visible', maxHeight: '90vh', display: 'flex',
           flexDirection: 'column', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
         }}
         onClick={(e) => e.stopPropagation()}

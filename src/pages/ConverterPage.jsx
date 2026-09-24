@@ -32,11 +32,17 @@ export default function ConverterPage({ from, to }) {
     const [pricingModalOpen, setPricingModalOpen] = useState(false);
 
     // When route changes (e.g. /jpg-to-png → /png-to-jpg), sync the format
+    const prevRouteRef = React.useRef(`${from}-${to}`);
     React.useEffect(() => {
+        const currentRoute = `${from}-${to}`;
+        if (prevRouteRef.current !== currentRoute) {
+            // Only clear files when the URL route actually changes
+            setItems([]);
+            setPreviewIndex(null);
+            setErrorMessage('');
+            prevRouteRef.current = currentRoute;
+        }
         if (to) setConvertFormat(to);
-        setItems([]); // clear files when route changes
-        setPreviewIndex(null);
-        setErrorMessage('');
     }, [from, to]);
 
     // Page title and subtitle

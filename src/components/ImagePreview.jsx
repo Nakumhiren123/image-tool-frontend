@@ -29,27 +29,17 @@ export default function ImagePreview({ items, currentIndex, onNavigate, onClose,
   const { file, previewUrl, processedResult } = item;
 
   // Only navigate among items that have been processed
-  const processedItems = items.map((it, idx) => ({ it, idx })).filter(({ it }) => it.processedResult);
+  const processedItems = items.map((it, idx) => ({ it, idx }));
   const totalProcessed = processedItems.length;
   // Position of current item among processed-only items
   const positionAmongProcessed = processedItems.findIndex(({ idx }) => idx === currentIndex);
 
-  const hasPrev = currentIndex > 0 && items.slice(0, currentIndex).some(it => it.processedResult);
-  const hasNext = currentIndex < items.length - 1 && items.slice(currentIndex + 1).some(it => it.processedResult);
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < items.length - 1;
 
   // Navigate to previous processed item
-  const goPrev = () => {
-    for (let i = currentIndex - 1; i >= 0; i--) {
-      if (items[i].processedResult) { onNavigate(i); return; }
-    }
-  };
-
-  // Navigate to next processed item
-  const goNext = () => {
-    for (let i = currentIndex + 1; i < items.length; i++) {
-      if (items[i].processedResult) { onNavigate(i); return; }
-    }
-  };
+  const goPrev = () => { if (currentIndex > 0) onNavigate(currentIndex - 1); };
+  const goNext = () => { if (currentIndex < items.length - 1) onNavigate(currentIndex + 1); };
 
   const resName = processedResult?.file?.name?.toLowerCase() || '';
   const isPdf = resName.endsWith('.pdf');

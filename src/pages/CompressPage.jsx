@@ -268,8 +268,14 @@ export default function CompressPage() {
                                             fontSize: '0.72rem', fontWeight: 700,
                                             padding: '2px 8px', borderRadius: 99,
                                             border: '1px solid rgba(16,185,129,0.25)',
-                                        }}>
-                                            +{items.length - 1} more
+                                            cursor: 'pointer',
+                                        }}
+                                            onClick={() => {
+                                                const el = document.getElementById('file-list-section');
+                                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                            }}
+                                        >
+                                            +{items.length - 1} more ↓
                                         </span>
                                     )}
                                 </div>
@@ -367,7 +373,7 @@ export default function CompressPage() {
 
                     {/* File list */}
                     {items.length > 0 && (
-                        <div className="animate-in">
+                        <div className="animate-in" id="file-list-section">
                             <div style={{
                                 display: 'flex', alignItems: 'center',
                                 justifyContent: 'space-between', marginBottom: 12,

@@ -128,7 +128,7 @@ export default function AdInterstitialModal({ isOpen, onClose, onAdComplete, onO
         </div>
 
         {/* ── Ad Content Area ── */}
-        <div style={{ padding: '24px 28px', background: '#FAFBFD' }}>
+        <div style={{ padding: 'clamp(14px, 4vw, 28px) clamp(14px, 5vw, 28px)', background: '#FAFBFD' }}>
 
           {/* Countdown badge */}
           {!adWatched && (
@@ -178,7 +178,7 @@ export default function AdInterstitialModal({ isOpen, onClose, onAdComplete, onO
             background: 'linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 100%)',
             border: '1px solid #BFDBFE',
             padding: '14px 18px',
-            display: 'flex', alignItems: 'center', gap: 14,
+            display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap',
           }}>
             <div style={{
               width: 40, height: 40, borderRadius: 12, flexShrink: 0,
@@ -214,7 +214,7 @@ export default function AdInterstitialModal({ isOpen, onClose, onAdComplete, onO
 
         {/* ── Footer: Download Button ── */}
         <div style={{
-          padding: '0 28px 24px',
+          padding: '0 clamp(14px, 5vw, 28px) clamp(14px, 4vw, 24px)',
           display: 'flex', flexDirection: 'column', gap: 10,
         }}>
           <button

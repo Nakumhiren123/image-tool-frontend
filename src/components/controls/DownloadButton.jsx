@@ -41,7 +41,7 @@ export default function DownloadButton({ onProcessAll, onDownloadZip, isProcessi
           style={{ width: '100%', justifyContent: 'center', borderRadius: 14, gap: 10 }}
         >
           <Archive size={16} />
-          <span>Download All as ZIP ({processedCount} images)</span>
+          <span>Download All ({processedCount} file{processedCount !== 1 ? 's' : ''}) as ZIP</span>
         </button>
       )}
     </div>

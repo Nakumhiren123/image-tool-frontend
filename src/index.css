@@ -811,6 +811,13 @@ input[type="range"]::-webkit-slider-thumb:hover {
   }
 }
 
+@media (min-width: 1400px) {
+  body {
+    padding-left: 160px;
+    padding-right: 160px;
+  }
+}
+
 /* ============================================
    RESPONSIVE — NAVBAR MOBILE MENU
    ============================================ */

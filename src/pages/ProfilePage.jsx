@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Shield, Calendar, Monitor, Globe, Clock, LogOut, Trash2, ChevronDown } from 'lucide-react';
+import { User, Mail, Shield, Calendar, Monitor, Globe, Clock, LogOut, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/useAuth';
 
 export default function ProfilePage() {
@@ -111,69 +111,100 @@ export default function ProfilePage() {
             </div>
 
             {/* ── Actions ── */}
-            <div style={{
-                background: '#fff',
-                border: '1px solid #E2E8F0',
-                borderRadius: 20,
-                overflow: 'hidden',
-                boxShadow: '0 4px 16px rgba(15,23,42,0.06)',
-            }}>
-                {/* Logout */}
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <button
                     type="button"
                     onClick={logoutUser}
                     style={{
-                        width: '100%', padding: '16px 20px',
-                        display: 'flex', alignItems: 'center', gap: 12,
-                        background: 'transparent', border: 'none',
-                        borderBottom: '1px solid #F1F5F9',
-                        cursor: 'pointer', textAlign: 'left',
+                        flex: 1, minWidth: 140,
+                        padding: '13px 20px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                        background: '#F1F5F9',
+                        border: '1px solid #E2E8F0',
+                        borderRadius: 14,
+                        cursor: 'pointer',
+                        fontWeight: 700, fontSize: '0.9rem', color: '#334155',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    onMouseEnter={e => e.currentTarget.style.background = '#E2E8F0'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#F1F5F9'}
                 >
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: '#FEF2F2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <LogOut size={16} color="#EF4444" />
-                    </div>
-                    <div>
-                        <p style={{ margin: 0, fontWeight: 700, fontSize: '0.9rem', color: '#0F172A' }}>Sign Out</p>
-                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#94A3B8' }}>Log out of your account</p>
-                    </div>
+                    <LogOut size={16} color="#475569" />
+                    Sign Out
                 </button>
 
-                {/* Delete account — collapsible danger zone */}
                 <button
                     type="button"
-                    onClick={() => setShowDanger(v => !v)}
+                    onClick={() => setShowDanger(true)}
                     style={{
-                        width: '100%', padding: '16px 20px',
-                        display: 'flex', alignItems: 'center', gap: 12,
-                        background: 'transparent', border: 'none',
-                        cursor: 'pointer', textAlign: 'left',
+                        flex: 1, minWidth: 140,
+                        padding: '13px 20px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                        background: '#FEF2F2',
+                        border: '1px solid #FECACA',
+                        borderRadius: 14,
+                        cursor: 'pointer',
+                        fontWeight: 700, fontSize: '0.9rem', color: '#DC2626',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#FFF7F7'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    onMouseEnter={e => e.currentTarget.style.background = '#FEE2E2'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#FEF2F2'}
                 >
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: '#FEF2F2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Trash2 size={16} color="#DC2626" />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                        <p style={{ margin: 0, fontWeight: 700, fontSize: '0.9rem', color: '#DC2626' }}>Delete Account</p>
-                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#94A3B8' }}>Permanently remove your account and data</p>
-                    </div>
-                    <ChevronDown size={16} color="#94A3B8" style={{ transform: showDanger ? 'rotate(180deg)' : 'none', transition: '0.2s' }} />
+                    <Trash2 size={16} color="#DC2626" />
+                    Delete Account
                 </button>
+            </div>
 
-                {showDanger && (
-                    <div style={{ padding: '0 20px 20px' }}>
-                        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: 16 }}>
-                            <p style={{ margin: '0 0 12px', fontSize: '0.82rem', color: '#991B1B', lineHeight: 1.5 }}>
-                                ⚠️ This action <strong>cannot be undone</strong>. All your data will be permanently deleted.
-                            </p>
+            {/* ── Delete Confirmation Modal ── */}
+            {showDanger && (
+                <div style={{
+                    position: 'fixed', inset: 0, zIndex: 9999,
+                    background: 'rgba(0,0,0,0.5)',
+                    backdropFilter: 'blur(4px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: 16,
+                }}
+                    onClick={() => setShowDanger(false)}
+                >
+                    <div style={{
+                        background: '#fff', borderRadius: 20,
+                        padding: 28, maxWidth: 400, width: '100%',
+                        boxShadow: '0 24px 60px rgba(0,0,0,0.2)',
+                    }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Icon */}
+                        <div style={{
+                            width: 52, height: 52, borderRadius: 14,
+                            background: '#FEF2F2', border: '1px solid #FECACA',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            marginBottom: 16,
+                        }}>
+                            <Trash2 size={24} color="#DC2626" />
+                        </div>
+
+                        <h3 style={{ margin: '0 0 8px', fontSize: '1.1rem', fontWeight: 800, color: '#0F172A' }}>
+                            Delete Account?
+                        </h3>
+                        <p style={{ margin: '0 0 24px', fontSize: '0.85rem', color: '#64748B', lineHeight: 1.6 }}>
+                            This action <strong style={{ color: '#DC2626' }}>cannot be undone</strong>. All your data, history and settings will be permanently deleted.
+                        </p>
+
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            <button
+                                type="button"
+                                onClick={() => setShowDanger(false)}
+                                style={{
+                                    flex: 1, padding: '12px',
+                                    background: '#F1F5F9', border: '1px solid #E2E8F0',
+                                    borderRadius: 12, fontWeight: 700,
+                                    fontSize: '0.88rem', color: '#334155',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                Cancel
+                            </button>
                             <button
                                 type="button"
                                 onClick={async () => {
-                                    if (!window.confirm('Are you sure? This cannot be undone.')) return;
                                     try {
                                         await deleteAccount();
                                         window.location.href = '/';
@@ -182,18 +213,19 @@ export default function ProfilePage() {
                                     }
                                 }}
                                 style={{
-                                    padding: '10px 20px', borderRadius: 10,
-                                    background: '#DC2626', color: '#fff',
-                                    fontWeight: 800, fontSize: '0.85rem',
-                                    border: 'none', cursor: 'pointer',
+                                    flex: 1, padding: '12px',
+                                    background: '#DC2626', border: 'none',
+                                    borderRadius: 12, fontWeight: 800,
+                                    fontSize: '0.88rem', color: '#fff',
+                                    cursor: 'pointer',
                                 }}
                             >
-                                Yes, Delete My Account
+                                Yes, Delete
                             </button>
                         </div>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </main>
     );
 }

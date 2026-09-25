@@ -87,7 +87,7 @@ export default function App() {
 
       <Routes>
         {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/jpg-to-png" replace />} />
+        <Route path="/" element={<Navigate to="/converters" replace />} />
 
         {/* ── Generic converter (user picks format manually) ── */}
         <Route path="/convert" element={<ConverterPage />} />

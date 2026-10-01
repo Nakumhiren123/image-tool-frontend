@@ -161,7 +161,7 @@ export default function SEOContentSection() {
             </div>
             <div style={{ padding: 16, background: '#F8FAFC', borderRadius: 12, border: '1px solid #F1F5F9' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#2563EB', marginBottom: 4 }}>STEP 3</div>
-              <h4 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#2563EB', marginBottom: 4 }}>Download Results</h4>
+              <h4 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#0F172A', marginBottom: 4 }}>Download Results</h4>
               <p style={{ fontSize: '0.82rem', color: '#64748B' }}>Download high-quality processed images individually or as a single ZIP file.</p>
             </div>
           </div>

@@ -26,11 +26,20 @@ export default function AdminPanelPage() {
     const [adMessage, setAdMessage] = useState('');
 
     useEffect(() => {
+        if (user === null) {
+            // Not logged in — redirect to home
+            window.location.href = '/';
+            return;
+        }
+        if (user && !user.is_admin) {
+            // Logged in but not admin — redirect to home
+            window.location.href = '/';
+            return;
+        }
         if (user?.is_admin) {
             fetchAdminData();
         }
     }, [user]);
-
     const fetchAdminData = async () => {
         setLoading(true);
 
@@ -234,6 +243,23 @@ export default function AdminPanelPage() {
                 ?.toLowerCase()
                 .includes(searchQuery.toLowerCase())
     );
+
+    if (!user) {
+        return (
+            <div style={{ padding: 60, textAlign: 'center', color: '#64748B' }}>
+                <h2>Please sign in to continue.</h2>
+            </div>
+        );
+    }
+
+    if (!user.is_admin) {
+        return (
+            <div style={{ padding: 60, textAlign: 'center', color: '#64748B' }}>
+                <h2 style={{ color: '#DC2626' }}>Access Denied</h2>
+                <p>You don't have permission to view this page.</p>
+            </div>
+        );
+    }
 
     return (
         <main

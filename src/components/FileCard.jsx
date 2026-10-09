@@ -127,6 +127,20 @@ export default function FileCard({ item, onRemove, onPreview, onCardClick, onDow
             </>
           )}
 
+          {status === 'error' && (
+            <span style={{
+              background: 'rgba(239, 68, 68, 0.15)',
+              color: '#f87171',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              padding: '2px 8px',
+              borderRadius: 99
+            }} title={item.errorMsg || item.error || 'Processing failed'}>
+              ⚠️ {item.errorMsg || item.error || 'Failed'}
+            </span>
+          )}
+
           {isRunning && (
             <span className="badge badge-indigo" style={{ animationName: 'pulse' }}>Processing…</span>
           )}

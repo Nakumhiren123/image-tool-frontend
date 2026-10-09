@@ -1,4 +1,3 @@
-import JSZip from 'jszip';
 import heic2any from 'heic2any';
 
 /**
@@ -10,7 +9,11 @@ export async function loadImage(file) {
   let imageBlob = file;
 
   // Check if file is iPhone HEIC / HEIF photo
-  const isHeic = file && file.name && /\.(heic|heif)$/i.test(file.name);
+  const isHeic = file && (
+    (file.name && /\.(heic|heif)$/i.test(file.name)) ||
+    (file.type && (file.type === 'image/heic' || file.type === 'image/heif'))
+  );
+
   if (isHeic) {
     try {
       const convertedBlob = await heic2any({
@@ -21,6 +24,9 @@ export async function loadImage(file) {
       imageBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
     } catch (err) {
       console.warn('HEIC decoding notice:', err);
+      throw new Error(
+        `Failed to decode HEIC image "${file.name || 'file'}". Please ensure it is a valid Apple HEIC photo or convert it to JPG on your iPhone.`
+      );
     }
   }
 
@@ -29,14 +35,21 @@ export async function loadImage(file) {
     const url = URL.createObjectURL(imageBlob);
     img.onload = () => {
       URL.revokeObjectURL(url);
+      if (img.naturalWidth * img.naturalHeight > 32_000_000) {
+        reject(
+          new Error(
+            `Image resolution (${img.naturalWidth}×${img.naturalHeight}px) exceeds the 32 Megapixel safety limit. Please reduce image dimensions first.`
+          )
+        );
+        return;
+      }
       resolve(img);
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-
       reject(
         new Error(
-          'Invalid or corrupted image file. Please upload a real JPG, PNG, WEBP, GIF, AVIF, BMP, TIFF, or HEIC image.'
+          `Unable to open "${file.name || 'image'}". The file may be corrupted or in an unsupported format.`
         )
       );
     };
@@ -45,10 +58,262 @@ export async function loadImage(file) {
 }
 
 /**
+ * Check if the browser natively supports encoding to a specific format
+ */
+export function isFormatSupported(format) {
+  const fmt = (format || '').toLowerCase();
+  if (fmt === 'avif') {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const dataUrl = canvas.toDataURL('image/avif');
+      return Boolean(dataUrl && dataUrl.startsWith('data:image/avif'));
+    } catch {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Encodes an HTMLCanvasElement into a 24-bit uncompressed BMP Blob
+ * @param {HTMLCanvasElement} canvas
+ * @returns {Blob}
+ */
+export function encodeCanvasToBmpBlob(canvas) {
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Flatten transparent pixels onto a white background canvas before reading pixels
+  let data;
+  if (typeof document !== 'undefined' && document.createElement) {
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = w;
+    bgCanvas.height = h;
+    const bgCtx = bgCanvas.getContext('2d');
+    if (bgCtx) {
+      bgCtx.fillStyle = '#FFFFFF';
+      bgCtx.fillRect(0, 0, w, h);
+      bgCtx.drawImage(canvas, 0, 0);
+      data = bgCtx.getImageData(0, 0, w, h).data;
+    }
+  }
+
+  if (!data) {
+    const ctx = canvas.getContext('2d');
+    data = ctx.getImageData(0, 0, w, h).data;
+  }
+
+  const rowSize = Math.floor((24 * w + 31) / 32) * 4;
+  const pixelArraySize = rowSize * h;
+  const fileSize = 54 + pixelArraySize;
+
+  const buffer = new ArrayBuffer(fileSize);
+  const view = new DataView(buffer);
+
+  // BITMAPFILEHEADER (14 bytes)
+  view.setUint8(0, 0x42); // 'B'
+  view.setUint8(1, 0x4D); // 'M'
+  view.setUint32(2, fileSize, true);
+  view.setUint16(6, 0, true);
+  view.setUint16(8, 0, true);
+  view.setUint32(10, 54, true);
+
+  // BITMAPINFOHEADER (40 bytes)
+  view.setUint32(14, 40, true);
+  view.setInt32(18, w, true);
+  view.setInt32(22, h, true);
+  view.setUint16(26, 1, true);
+  view.setUint16(28, 24, true);
+  view.setUint32(30, 0, true);
+  view.setUint32(34, pixelArraySize, true);
+  view.setInt32(38, 2835, true);
+  view.setInt32(42, 2835, true);
+  view.setUint32(46, 0, true);
+  view.setUint32(50, 0, true);
+
+  const bytes = new Uint8Array(buffer);
+  for (let y = h - 1; y >= 0; y--) {
+    const rowOffset = 54 + (h - 1 - y) * rowSize;
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const pixelPos = rowOffset + x * 3;
+      bytes[pixelPos] = b;
+      bytes[pixelPos + 1] = g;
+      bytes[pixelPos + 2] = r;
+    }
+  }
+
+  return new Blob([buffer], { type: 'image/bmp' });
+}
+
+/**
+ * Encodes an HTMLCanvasElement into a valid static GIF Blob (GIF89a)
+ * Uses variable-width LZW compression (9 to 12 bits) as required by the GIF89a specification.
+ * @param {HTMLCanvasElement} canvas
+ * @returns {Blob}
+ */
+export function encodeCanvasToGifBlob(canvas) {
+  const maxDim = 800;
+  let targetCanvas = canvas;
+  if (canvas.width > maxDim || canvas.height > maxDim) {
+    let w = canvas.width;
+    let h = canvas.height;
+    if (w > h) { h = Math.round((maxDim / w) * h); w = maxDim; }
+    else { w = Math.round((maxDim / h) * w); h = maxDim; }
+    if (typeof document !== 'undefined' && document.createElement) {
+      const scaled = document.createElement('canvas');
+      scaled.width = w;
+      scaled.height = h;
+      const sCtx = scaled.getContext('2d');
+      if (sCtx) {
+        sCtx.drawImage(canvas, 0, 0, w, h);
+        targetCanvas = scaled;
+      }
+    }
+  }
+
+  const w = targetCanvas.width;
+  const h = targetCanvas.height;
+  const ctx = targetCanvas.getContext('2d');
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const data = imgData.data;
+
+  // 1. Color Quantization (256 colors) & Alpha Transparency Detection
+  const palette = [];
+  const colorMap = new Map();
+  const indexedPixels = new Uint8Array(w * h);
+  let transparentIndex = -1;
+
+  for (let i = 0; i < w * h; i++) {
+    const r = data[i * 4];
+    const g = data[i * 4 + 1];
+    const b = data[i * 4 + 2];
+    const a = data[i * 4 + 3];
+
+    let idx;
+    if (a < 128) {
+      if (transparentIndex === -1) {
+        transparentIndex = 255;
+      }
+      idx = transparentIndex;
+    } else {
+      const key = ((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3);
+      idx = colorMap.get(key);
+      if (idx === undefined) {
+        if (palette.length < (transparentIndex !== -1 ? 255 : 256)) {
+          idx = palette.length;
+          palette.push([r, g, b]);
+          colorMap.set(key, idx);
+        } else {
+          idx = 0;
+          let minDist = Infinity;
+          for (let p = 0; p < palette.length; p++) {
+            const dist = (r - palette[p][0]) ** 2 + (g - palette[p][1]) ** 2 + (b - palette[p][2]) ** 2;
+            if (dist < minDist) { minDist = dist; idx = p; }
+          }
+        }
+      }
+    }
+    indexedPixels[i] = idx;
+  }
+
+  while (palette.length < 256) palette.push([0, 0, 0]);
+
+  // 2. GIF Header & Global Color Table (GIF89a)
+  const buffer = [];
+  buffer.push(0x47, 0x49, 0x46, 0x38, 0x39, 0x61); // "GIF89a"
+  buffer.push(w & 0xFF, (w >> 8) & 0xFF, h & 0xFF, (h >> 8) & 0xFF, 0xF7, 0x00, 0x00);
+  for (let p = 0; p < 256; p++) {
+    buffer.push(palette[p][0], palette[p][1], palette[p][2]);
+  }
+
+  // Graphic Control Extension (0x21 0xF9) for GIF Alpha / Transparency
+  if (transparentIndex !== -1) {
+    buffer.push(0x21, 0xF9, 0x04, 0x01, 0x00, 0x00, transparentIndex, 0x00);
+  }
+
+  // Image Descriptor
+  buffer.push(0x2C, 0x00, 0x00, 0x00, 0x00, w & 0xFF, (w >> 8) & 0xFF, h & 0xFF, (h >> 8) & 0xFF, 0x00);
+
+  // LZW Minimum Code Size byte
+  const minCodeSize = 8;
+  buffer.push(minCodeSize); // 0x08
+
+  // 3. GIF89a Variable-Width LZW Compression
+  const lzwBytes = [];
+  let accum = 0, accumBits = 0;
+
+  const writeBits = (val, numBits) => {
+    accum |= (val << accumBits);
+    accumBits += numBits;
+    while (accumBits >= 8) {
+      lzwBytes.push(accum & 0xFF);
+      accum >>= 8;
+      accumBits -= 8;
+    }
+  };
+
+  const clearCode = 1 << minCodeSize; // 256
+  const eoiCode   = clearCode + 1;     // 257
+  let currentBits = minCodeSize + 1;   // 9
+  let nextCode    = eoiCode + 1;       // 258
+  const dict = new Map();
+
+  const resetDict = () => {
+    dict.clear();
+    currentBits = minCodeSize + 1;
+    nextCode    = eoiCode + 1;
+  };
+
+  writeBits(clearCode, currentBits);
+
+  if (indexedPixels.length > 0) {
+    let prefix = indexedPixels[0];
+
+    for (let i = 1; i < indexedPixels.length; i++) {
+      const k   = indexedPixels[i];
+      const key = (prefix << 16) | k;
+
+      if (dict.has(key)) {
+        prefix = dict.get(key);
+      } else {
+        writeBits(prefix, currentBits);
+        if (nextCode < 4096) {
+          dict.set(key, nextCode++);
+          if (nextCode > (1 << currentBits) && currentBits < 12) currentBits++;
+        } else {
+          writeBits(clearCode, currentBits);
+          resetDict();
+        }
+        prefix = k;
+      }
+    }
+    writeBits(prefix, currentBits);
+  }
+
+  writeBits(eoiCode, currentBits);
+  if (accumBits > 0) lzwBytes.push(accum & 0xFF);
+
+  // 4. Pack into GIF sub-blocks (max 255 bytes each)
+  for (let i = 0; i < lzwBytes.length; i += 255) {
+    const chunk = lzwBytes.slice(i, i + 255);
+    buffer.push(chunk.length, ...chunk);
+  }
+  buffer.push(0x00, 0x3B); // Block terminator + GIF trailer
+
+  return new Blob([new Uint8Array(buffer)], { type: 'image/gif' });
+}
+
+/**
  * Format bytes into human readable string (KB, MB)
  */
 export function formatBytes(bytes, decimals = 2) {
-  if (bytes === 0) return '0 Bytes';
+  if (!bytes || bytes <= 0) return '0 Bytes';
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -155,7 +420,21 @@ export async function exportCanvasToBlob(canvas, targetFormat, originalFile, des
   }
 
   let quality = isLossy ? desiredQuality : undefined;
-  let blob = await new Promise((resolve) => exportCanvas.toBlob(resolve, mime, quality));
+  let blob = null;
+
+  if (fmt === 'bmp') {
+    blob = encodeCanvasToBmpBlob(exportCanvas);
+  } else if (fmt === 'gif') {
+    blob = encodeCanvasToGifBlob(exportCanvas);
+  } else {
+    blob = await new Promise((resolve) => exportCanvas.toBlob(resolve, mime, quality));
+  }
+
+  // Fallback if target format encoding is unsupported natively by browser (e.g. AVIF in Firefox)
+  if (!blob) {
+    const fallbackMime = 'image/jpeg';
+    blob = await new Promise((resolve) => exportCanvas.toBlob(resolve, fallbackMime, 0.9));
+  }
 
   // GIF size cap protection
   if (fmt === 'gif' && originalFile && originalFile.size && blob.size > originalFile.size) {
@@ -849,9 +1128,9 @@ export async function compressToTargetSize(file, targetKB, format = 'jpeg', prog
 /**
  * Resize Image
  */
-const MAX_RESIZE_WIDTH = 20000;
-const MAX_RESIZE_HEIGHT = 20000;
-const MAX_RESIZE_PIXELS = 100_000_000;
+const MAX_RESIZE_WIDTH = 8000;
+const MAX_RESIZE_HEIGHT = 8000;
+const MAX_RESIZE_PIXELS = 32_000_000;
 
 export async function resizeImage(
   file,
@@ -1271,6 +1550,7 @@ export async function mergeImages(files, direction = 'horizontal', padding = 10,
  * Bulk Zip Downloader
  */
 export async function downloadZip(results, zipName = 'piccraft_batch.zip') {
+  const { default: JSZip } = await import('jszip');
   const zip = new JSZip();
   for (const item of results) {
     if (item.file) {

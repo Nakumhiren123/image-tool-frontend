@@ -1,8 +1,9 @@
 // src/components/controls/ConvertOptions.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Layers, Check, Film, ArrowRight } from 'lucide-react';
+import { Layers, Check, Film, ArrowRight, AlertTriangle } from 'lucide-react';
 import { FORMAT_COLORS } from '../../config/converters';
+import { isFormatSupported } from '../../lib/imageEngine';
 
 const FORMATS = [
   { id: 'png', label: 'PNG', desc: 'Lossless' },
@@ -12,7 +13,6 @@ const FORMATS = [
   { id: 'avif', label: 'AVIF', desc: 'Next-Gen' },
   { id: 'gif', label: 'GIF', desc: '🎬 Animated', isGif: true },
   { id: 'bmp', label: 'BMP', desc: 'Raw' },
-  // { id: 'heic', label: 'HEIC', desc: 'iPhone' },
   { id: 'ico', label: 'ICO', desc: 'Favicon' },
   { id: 'pdf', label: 'PDF', desc: 'Document' },
   { id: 'docx', label: 'DOCX', desc: 'Word Doc' },
@@ -39,6 +39,7 @@ export default function ConvertOptions({
   const navigate = useNavigate();
   const showQuality = ['jpg', 'jpeg', 'webp', 'avif', 'pdf', 'docx'].includes(format);
   const fromColors = FORMAT_COLORS[from] || { bg: '#EDE9FE', color: '#7C3AED' };
+  const isAvifAvail = isFormatSupported('avif');
 
   const handleFormatChange = (newFormat) => {
     if (from) {
@@ -79,6 +80,19 @@ export default function ConvertOptions({
         </div>
       )}
 
+      {/* AVIF browser capability notice */}
+      {format === 'avif' && !isAvifAvail && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '10px 14px', borderRadius: 10,
+          background: '#FEF3C7', border: '1px solid #F59E0B',
+          color: '#92400E', fontSize: '0.8rem', fontWeight: 600,
+        }}>
+          <AlertTriangle size={16} color="#D97706" style={{ flexShrink: 0 }} />
+          <span>AVIF encoding is not natively supported in your current browser. Fallback to JPEG will be used.</span>
+        </div>
+      )}
+
       {/* Format grid — always shown, clicking redirects on route pages */}
       <div className="format-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
         {(from
@@ -86,6 +100,7 @@ export default function ConvertOptions({
           : FORMATS.filter((f) => f.id !== 'docx')
         ).map((f) => {
           const isSelected = format === f.id;
+          const isUnsupportedAvif = f.id === 'avif' && !isAvifAvail;
           return (
             <button
               key={f.id}
@@ -95,7 +110,9 @@ export default function ConvertOptions({
                 position: 'relative',
                 background: f.isGif ? (isSelected ? '#F5F3FF' : '#FAF5FF') : undefined,
                 borderColor: f.isGif ? (isSelected ? '#8B5CF6' : '#E9D5FF') : undefined,
+                opacity: isUnsupportedAvif ? 0.75 : 1,
               }}
+              title={isUnsupportedAvif ? "AVIF encoding not supported in this browser — WEBP or JPG recommended" : undefined}
             >
               {isSelected && (
                 <div style={{
@@ -123,7 +140,7 @@ export default function ConvertOptions({
                 marginTop: 3,
                 fontWeight: f.isGif ? 700 : 500,
               }}>
-                {f.desc}
+                {isUnsupportedAvif ? 'Limited' : f.desc}
               </p>
             </button>
           );
@@ -156,3 +173,4 @@ export default function ConvertOptions({
     </div>
   );
 }
+

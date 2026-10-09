@@ -2,7 +2,9 @@
 import { useEffect } from 'react';
 import { getConverterSEO } from '../../config/converters';
 
-const BASE_URL = 'https://image-tool-frontend.vercel.app';
+const BASE_URL =
+  import.meta.env.VITE_SITE_URL ||
+  (typeof window !== 'undefined' ? window.location.origin : 'https://image-tool-frontend.vercel.app');
 
 const SEO_PRESETS = {
   default: {

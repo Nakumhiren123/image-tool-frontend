@@ -30,17 +30,19 @@ export default function ResizeControls({
 }) {
 
   const handleW = (val) => {
-    const w = Math.max(1, parseInt(val) || 0);
+    const raw = parseInt(val) || 0;
+    const w = Math.min(8000, Math.max(1, raw));
     setWidth(w);
     if (maintainAspect && originalWidth && originalHeight)
-      setHeight(Math.round((w / originalWidth) * originalHeight));
+      setHeight(Math.min(8000, Math.max(1, Math.round((w / originalWidth) * originalHeight))));
   };
 
   const handleH = (val) => {
-    const h = Math.max(1, parseInt(val) || 0);
+    const raw = parseInt(val) || 0;
+    const h = Math.min(8000, Math.max(1, raw));
     setHeight(h);
     if (maintainAspect && originalWidth && originalHeight)
-      setWidth(Math.round((h / originalHeight) * originalWidth));
+      setWidth(Math.min(8000, Math.max(1, Math.round((h / originalHeight) * originalWidth))));
   };
 
   const scale = (pct) => {

@@ -5,6 +5,23 @@ const API_BASE =
   (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
 
 
+// Module-level cache — shared across all AdSlot instances
+const _adsCache = { data: null, ts: 0 };
+const ADS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+async function fetchAdsWithCache(apiBase) {
+  if (_adsCache.data && (Date.now() - _adsCache.ts) < ADS_CACHE_TTL) {
+    return _adsCache.data;
+  }
+  const res = await fetch(`${apiBase}/ads`);
+  const json = await res.json();
+  if (json.success) {
+    _adsCache.data = json.ads;
+    _adsCache.ts = Date.now();
+  }
+  return json.success ? json.ads : [];
+}
+
 const AD_SIZES = {
   leaderboard: { w: 728, h: 90, label: '728×90 Leaderboard' },
   rectangle: { w: 300, h: 250, label: '300×250 Rectangle' },
@@ -108,13 +125,10 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
   const [adData, setAdData] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/ads`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          const match = data.ads.find(ad => ad.position === type);
-          setAdData(match || null);
-        }
+    fetchAdsWithCache(API_BASE)
+      .then(ads => {
+        const match = ads.find(ad => ad.position === type);
+        setAdData(match || null);
       })
       .catch(() => setAdData(null));
   }, [type]);

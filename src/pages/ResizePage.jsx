@@ -93,27 +93,44 @@ export default function ResizePage() {
     const handleProcessAll = async () => {
         if (!items.length) return;
         setIsProcessing(true);
+        setErrorMessage('');
         try {
-            const updated = await Promise.all(items.map(async (item) => {
-                let result;
-                if (resizeMode === 'targetSize') {
-                    const targetKB = resizeTargetUnit === 'MB' ? resizeTargetSize * 1024 : resizeTargetSize;
-                    result = await compressToTargetSize(item.file, targetKB, 'jpeg');
-                } else {
-                    result = await resizeImage(item.file, resizeWidth, resizeHeight, maintainAspect, '');
+            const updated = [];
+            let hasError = false;
+            for (const item of items) {
+                try {
+                    let result;
+                    if (resizeMode === 'targetSize') {
+                        const targetKB = resizeTargetUnit === 'MB' ? resizeTargetSize * 1024 : resizeTargetSize;
+                        result = await compressToTargetSize(item.file, targetKB, 'jpeg');
+                    } else {
+                        result = await resizeImage(item.file, resizeWidth, resizeHeight, maintainAspect, '');
+                    }
+                    updated.push({ ...item, status: 'done', processedResult: result });
+                } catch (itemErr) {
+                    console.error('Resize item error:', item.file?.name, itemErr);
+                    hasError = true;
+                    if (itemErr?.upgradeRequired || itemErr?.code === 'BATCH_LIMIT_EXCEEDED' || itemErr?.code === 'FILE_SIZE_EXCEEDED') {
+                        setPricingModalOpen(true);
+                    }
+                    const msg = itemErr.message || 'Processing failed. Please try a different image.';
+                    updated.push({ ...item, status: 'error', errorMsg: msg, error: msg });
                 }
-                return { ...item, status: 'done', processedResult: result };
-            }));
+            }
             setItems(updated);
+            if (hasError) {
+                setErrorMessage('One or more files failed to process. Please try reducing dimensions or uploading a valid file.');
+            }
             if (updated[0]?.processedResult) setPreviewIndex(0);
         } catch (err) {
             console.error(err);
-
-            setErrorMessage(
-                err?.message || 'Image processing failed. Please try again.'
-            );
+            if (err?.upgradeRequired || err?.code === 'BATCH_LIMIT_EXCEEDED' || err?.code === 'FILE_SIZE_EXCEEDED') {
+                setPricingModalOpen(true);
+            }
+            setErrorMessage(err?.message || 'Processing failed. Please try a different image.');
+        } finally {
+            setIsProcessing(false);
         }
-        finally { setIsProcessing(false); }
     };
 
     /* ── Download ── */

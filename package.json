@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
+    "test": "node --import ./src/tests/setup.js --test src/tests/converters.test.js src/tests/imageEngine.test.js",
     "preview": "vite preview",
+    "sitemap": "node scripts/generate-sitemap.js",
     "vercel-build": "vite build"
   },
   "dependencies": {

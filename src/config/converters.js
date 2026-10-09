@@ -12,6 +12,8 @@ export const CONVERTERS = [
     { from: 'jpg', to: 'gif', slug: 'jpg-to-gif', label: 'JPG to GIF', description: 'Convert JPG images to GIF format' },
     { from: 'jpg', to: 'bmp', slug: 'jpg-to-bmp', label: 'JPG to BMP', description: 'Convert JPG to BMP bitmap format for Windows compatibility' },
     { from: 'jpg', to: 'pdf', slug: 'jpg-to-pdf', label: 'JPG to PDF', description: 'Convert JPG images to PDF document format' },
+    { from: 'jpg', to: 'ico', slug: 'jpg-to-ico', label: 'JPG to ICO', description: 'Convert JPG images to ICO favicon format' },
+    { from: 'jpg', to: 'docx', slug: 'jpg-to-docx', label: 'JPG to DOCX', description: 'Convert JPG image into a Word document (.docx)' },
 
     // ── PNG ──────────────────────────────────────────
     { from: 'png', to: 'jpg', slug: 'png-to-jpg', label: 'PNG to JPG', description: 'Convert PNG images to JPG — smaller file size for photos' },
@@ -21,6 +23,8 @@ export const CONVERTERS = [
     { from: 'png', to: 'gif', slug: 'png-to-gif', label: 'PNG to GIF', description: 'Convert PNG images to GIF format' },
     { from: 'png', to: 'bmp', slug: 'png-to-bmp', label: 'PNG to BMP', description: 'Convert PNG to BMP bitmap format' },
     { from: 'png', to: 'pdf', slug: 'png-to-pdf', label: 'PNG to PDF', description: 'Convert PNG images to PDF document' },
+    { from: 'png', to: 'ico', slug: 'png-to-ico', label: 'PNG to ICO', description: 'Convert PNG images to ICO favicon format' },
+    { from: 'png', to: 'docx', slug: 'png-to-docx', label: 'PNG to DOCX', description: 'Convert PNG image into a Word document (.docx)' },
 
     // ── JPEG ─────────────────────────────────────────
     { from: 'jpeg', to: 'jpg', slug: 'jpeg-to-jpg', label: 'JPEG to JPG', description: 'Convert JPEG to JPG — same format, different extension' },
@@ -30,6 +34,8 @@ export const CONVERTERS = [
     { from: 'jpeg', to: 'gif', slug: 'jpeg-to-gif', label: 'JPEG to GIF', description: 'Convert JPEG images to GIF format' },
     { from: 'jpeg', to: 'bmp', slug: 'jpeg-to-bmp', label: 'JPEG to BMP', description: 'Convert JPEG to BMP bitmap format' },
     { from: 'jpeg', to: 'pdf', slug: 'jpeg-to-pdf', label: 'JPEG to PDF', description: 'Convert JPEG images to PDF document' },
+    { from: 'jpeg', to: 'ico', slug: 'jpeg-to-ico', label: 'JPEG to ICO', description: 'Convert JPEG images to ICO favicon format' },
+    { from: 'jpeg', to: 'docx', slug: 'jpeg-to-docx', label: 'JPEG to DOCX', description: 'Convert JPEG image into a Word document (.docx)' },
 
     // ── WEBP ─────────────────────────────────────────
     { from: 'webp', to: 'jpg', slug: 'webp-to-jpg', label: 'WEBP to JPG', description: 'Convert WEBP images to JPG for universal compatibility' },
@@ -38,40 +44,37 @@ export const CONVERTERS = [
     { from: 'webp', to: 'avif', slug: 'webp-to-avif', label: 'WEBP to AVIF', description: 'Convert WEBP to AVIF next-gen format' },
     { from: 'webp', to: 'gif', slug: 'webp-to-gif', label: 'WEBP to GIF', description: 'Convert WEBP images to GIF format' },
     { from: 'webp', to: 'bmp', slug: 'webp-to-bmp', label: 'WEBP to BMP', description: 'Convert WEBP to BMP bitmap format' },
+    { from: 'webp', to: 'ico', slug: 'webp-to-ico', label: 'WEBP to ICO', description: 'Convert WEBP images to ICO favicon format' },
+    { from: 'webp', to: 'pdf', slug: 'webp-to-pdf', label: 'WEBP to PDF', description: 'Convert WEBP images to PDF document format' },
+    { from: 'webp', to: 'docx', slug: 'webp-to-docx', label: 'WEBP to DOCX', description: 'Convert WEBP image into a Word document (.docx)' },
 
     // ── AVIF ─────────────────────────────────────────
     { from: 'avif', to: 'jpg', slug: 'avif-to-jpg', label: 'AVIF to JPG', description: 'Convert AVIF images to JPG for broad compatibility' },
     { from: 'avif', to: 'jpeg', slug: 'avif-to-jpeg', label: 'AVIF to JPEG', description: 'Convert AVIF to JPEG format' },
     { from: 'avif', to: 'png', slug: 'avif-to-png', label: 'AVIF to PNG', description: 'Convert AVIF to PNG with lossless quality' },
     { from: 'avif', to: 'webp', slug: 'avif-to-webp', label: 'AVIF to WEBP', description: 'Convert AVIF to WEBP format' },
+    { from: 'avif', to: 'ico', slug: 'avif-to-ico', label: 'AVIF to ICO', description: 'Convert AVIF images to ICO favicon format' },
 
     // ── GIF ──────────────────────────────────────────
     { from: 'gif', to: 'jpg', slug: 'gif-to-jpg', label: 'GIF to JPG', description: 'Convert GIF images to JPG format' },
     { from: 'gif', to: 'jpeg', slug: 'gif-to-jpeg', label: 'GIF to JPEG', description: 'Convert GIF to JPEG format' },
     { from: 'gif', to: 'png', slug: 'gif-to-png', label: 'GIF to PNG', description: 'Convert GIF to PNG with transparency support' },
     { from: 'gif', to: 'webp', slug: 'gif-to-webp', label: 'GIF to WEBP', description: 'Convert GIF to WEBP for better compression' },
+    { from: 'gif', to: 'ico', slug: 'gif-to-ico', label: 'GIF to ICO', description: 'Convert GIF images to ICO favicon format' },
 
     // ── BMP ──────────────────────────────────────────
     { from: 'bmp', to: 'jpg', slug: 'bmp-to-jpg', label: 'BMP to JPG', description: 'Convert BMP bitmap to JPG for smaller file sizes' },
     { from: 'bmp', to: 'jpeg', slug: 'bmp-to-jpeg', label: 'BMP to JPEG', description: 'Convert BMP to JPEG format' },
     { from: 'bmp', to: 'png', slug: 'bmp-to-png', label: 'BMP to PNG', description: 'Convert BMP bitmap to PNG format' },
     { from: 'bmp', to: 'webp', slug: 'bmp-to-webp', label: 'BMP to WEBP', description: 'Convert BMP to WEBP for web-optimized images' },
-
-    // ── ICO (Favicon) ────────────────────────────────
-    { from: 'png', to: 'ico', slug: 'png-to-ico', label: 'PNG to ICO', description: 'Convert PNG images to ICO favicon format for websites' },
-    { from: 'jpg', to: 'ico', slug: 'jpg-to-ico', label: 'JPG to ICO', description: 'Convert JPG images to ICO favicon format' },
-    { from: 'jpeg', to: 'ico', slug: 'jpeg-to-ico', label: 'JPEG to ICO', description: 'Convert JPEG images to ICO favicon format' },
-    { from: 'webp', to: 'ico', slug: 'webp-to-ico', label: 'WEBP to ICO', description: 'Convert WEBP images to ICO favicon format' },
-    { from: 'avif', to: 'ico', slug: 'avif-to-ico', label: 'AVIF to ICO', description: 'Convert AVIF images to ICO favicon format' },
-    { from: 'gif', to: 'ico', slug: 'gif-to-ico', label: 'GIF to ICO', description: 'Convert GIF images to ICO favicon format' },
     { from: 'bmp', to: 'ico', slug: 'bmp-to-ico', label: 'BMP to ICO', description: 'Convert BMP images to ICO favicon format' },
-    { from: 'heic', to: 'ico', slug: 'heic-to-ico', label: 'HEIC to ICO', description: 'Convert iPhone HEIC photos to ICO favicon format' },
 
     // ── HEIC / HEIF (iPhone photos) ──────────────────
     { from: 'heic', to: 'jpg', slug: 'heic-to-jpg', label: 'HEIC to JPG', description: 'Convert iPhone HEIC photos to JPG for universal sharing' },
     { from: 'heic', to: 'jpeg', slug: 'heic-to-jpeg', label: 'HEIC to JPEG', description: 'Convert iPhone HEIC photos to JPEG format' },
     { from: 'heic', to: 'png', slug: 'heic-to-png', label: 'HEIC to PNG', description: 'Convert iPhone HEIC photos to PNG format' },
     { from: 'heic', to: 'webp', slug: 'heic-to-webp', label: 'HEIC to WEBP', description: 'Convert iPhone HEIC photos to WEBP format' },
+    { from: 'heic', to: 'ico', slug: 'heic-to-ico', label: 'HEIC to ICO', description: 'Convert iPhone HEIC photos to ICO favicon format' },
     { from: 'heif', to: 'jpg', slug: 'heif-to-jpg', label: 'HEIF to JPG', description: 'Convert HEIF images to JPG for universal compatibility' },
     { from: 'heif', to: 'png', slug: 'heif-to-png', label: 'HEIF to PNG', description: 'Convert HEIF images to PNG format' },
 ];

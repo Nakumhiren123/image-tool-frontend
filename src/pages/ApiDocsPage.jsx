@@ -23,8 +23,12 @@ formData.append('image', file);
 formData.append('format', 'webp');
 formData.append('quality', '80');
 
-const res = await fetch('https://image-tool-backend.vercel.app/api/convert', {
+const res = await fetch('/api/convert', {
   method: 'POST',
+  credentials: 'include',
+  headers: {
+    'x-csrf-token': csrfToken
+  },
   body: formData
 });
 const blob = await res.blob();
@@ -154,17 +158,17 @@ export default function ApiDocsPage() {
                 {/* Quick info boxes */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 40 }}>
                     {[
-                        { icon: <Zap size={18} color="#F59E0B" />, label: 'Base URL', value: 'https://image-tool-backend.vercel.app' },
+                        { icon: <Zap size={18} color="#F59E0B" />, label: 'Base URL', value: '/api' },
                         {
                             icon: <Key size={18} color="#6366F1" />,
                             label: 'Authentication',
-                            value: 'No public API key required'
+                            value: 'Session Cookie + CSRF'
                         },
                         { icon: <Terminal size={18} color="#10B981" />, label: 'Response Format', value: 'Binary image stream' },
                         {
                             icon: <BookOpen size={18} color="#3B82F6" />,
-                            label: 'API Access',
-                            value: 'Available through documented endpoints'
+                            label: 'Rate Limits',
+                            value: '30 requests / minute'
                         },
                     ].map((box) => (
                         <div key={box.label} style={{

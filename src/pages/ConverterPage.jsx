@@ -184,19 +184,31 @@ export default function ConverterPage({ from, to }) {
     const handleProcessAll = async () => {
         if (!items.length) return;
         setIsProcessing(true);
+        setErrorMessage('');
         try {
-            const updated = await Promise.all(items.map(async (item) => {
-                const result = await convertImage(item.file, convertFormat, convertQuality);
-                return { ...item, status: 'done', processedResult: result };
-            }));
+            const updated = [];
+            let hasError = false;
+            for (const item of items) {
+                try {
+                    if (item.processedResult?.url) {
+                        URL.revokeObjectURL(item.processedResult.url);
+                    }
+                    const result = await convertImage(item.file, convertFormat, convertQuality);
+                    updated.push({ ...item, status: 'done', processedResult: result });
+                } catch (itemErr) {
+                    console.error('Convert item error:', item.file?.name, itemErr);
+                    hasError = true;
+                    updated.push({ ...item, status: 'error', error: itemErr.message });
+                }
+            }
             setItems(updated);
+            if (hasError) {
+                setErrorMessage('One or more files failed to convert. Please check file format or reduce resolution.');
+            }
             if (updated[0]?.processedResult) setPreviewIndex(0);
         } catch (err) {
             console.error(err);
-
-            setErrorMessage(
-                err?.message || 'Something went wrong. Please try again.'
-            );
+            setErrorMessage(err?.message || 'Something went wrong. Please try again.');
         } finally {
             setIsProcessing(false);
         }

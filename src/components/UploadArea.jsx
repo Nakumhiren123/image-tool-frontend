@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { UploadCloud, FilePlus, Clipboard, Plus } from 'lucide-react';
+import { UploadCloud, FilePlus, Clipboard, Plus, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/useAuth';
 
 export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles = false, multiple = true }) {
@@ -7,7 +7,7 @@ export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles 
   const fileInputRef = useRef(null);
 
   const { isPro } = useAuth();
-  const maxUploadMB = isPro ? 50 : 10;
+  const maxUploadMB = isPro ? 50 : 25;
 
   const handleDragOver = (e) => { e.preventDefault(); setIsDragOver(true); };
   const handleDragLeave = (e) => { e.preventDefault(); setIsDragOver(false); };
@@ -20,6 +20,13 @@ export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles 
   };
   const handleFileChange = (e) => {
     if (e.target.files?.length > 0) onFilesSelected(Array.from(e.target.files));
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInputRef.current?.click();
+    }
   };
 
   useEffect(() => {
@@ -46,12 +53,16 @@ export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles 
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={hasFiles ? "Add more images area" : "File upload area. Click or press space/enter to choose images, or drag and drop images here."}
       className={`drop-zone${isDragOver ? ' drag-over' : ''}`}
       style={hasFiles ? { padding: '32px 24px' } : {}}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={() => fileInputRef.current?.click()}
+      onKeyDown={handleKeyDown}
     >
       <input
         ref={fileInputRef}
@@ -90,13 +101,14 @@ export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles 
       <button
         type="button"
         className="btn btn-primary btn-md"
+        tabIndex={-1}
         style={{ borderRadius: 12, pointerEvents: 'none', marginBottom: hasFiles ? 12 : 20 }}
       >
         {hasFiles ? <Plus size={16} /> : <FilePlus size={15} />}
         <span>{defaultBtnText}</span>
       </button>
 
-      {/* Hints */}
+      {/* Hints & Trust Badge */}
       {!hasFiles && (
         <div style={{
           display: 'flex',
@@ -108,10 +120,15 @@ export default function UploadArea({ onFilesSelected, title, subtitle, hasFiles 
           <span className="badge badge-indigo">Batch Support</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.75rem', color: 'var(--text-3)' }}>
             <Clipboard size={12} />
-            Ctrl+V paste works
+            Ctrl+V paste
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.75rem', color: 'var(--emerald-400, #10b981)', fontWeight: 600 }}>
+            <ShieldCheck size={14} color="#10b981" />
+            100% Secure — Files stay in browser
           </span>
         </div>
       )}
     </div>
   );
 }
+

@@ -8,6 +8,20 @@ const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
 
+async function handleApiResponse(response, defaultErrorText) {
+  if (!response.ok) {
+    let errData;
+    try { errData = await response.json(); } catch { }
+    const err = new Error(errData?.error || `${defaultErrorText}: ${response.statusText}`);
+    if (errData) {
+      err.code = errData.code;
+      err.upgradeRequired = errData.upgradeRequired;
+    }
+    throw err;
+  }
+  return response;
+}
+
 export const apiService = {
   /**
    * Health Check to see if Node backend server is online
@@ -30,15 +44,13 @@ export const apiService = {
     formData.append('format', targetFormat);
     formData.append('quality', options.quality || 80);
 
-    const response = await csrfFetch(`${API_BASE_URL}/convert`, {
+    const rawResponse = await csrfFetch(`${API_BASE_URL}/convert`, {
       method: 'POST',
       credentials: 'include',
       body: formData,
     });
 
-    if (!response.ok) {
-      throw new Error(`Backend Convert failed: ${response.statusText}`);
-    }
+    const response = await handleApiResponse(rawResponse, 'Backend Convert failed');
 
     const blob = await response.blob();
     const newName = file.name.replace(/\.[^/.]+$/, '') + '.' + targetFormat.toLowerCase();
@@ -60,15 +72,13 @@ export const apiService = {
     formData.append('quality', quality);
     if (targetKB) formData.append('targetKB', targetKB);
 
-    const response = await csrfFetch(`${API_BASE_URL}/compress`, {
+    const rawResponse = await csrfFetch(`${API_BASE_URL}/compress`, {
       method: 'POST',
       credentials: 'include',
       body: formData,
     });
 
-    if (!response.ok) {
-      throw new Error(`Backend Compress failed: ${response.statusText}`);
-    }
+    const response = await handleApiResponse(rawResponse, 'Backend Compress failed');
 
     const blob = await response.blob();
     const newName = file.name.replace(/\.[^/.]+$/, '') + '_compressed' + (file.name.match(/\.[^/.]+$/)?.[0] || '.jpg');
@@ -91,14 +101,13 @@ export const apiService = {
     formData.append('height', height);
     formData.append('maintainAspect', maintainAspect);
 
-    const response = await csrfFetch(`${API_BASE_URL}/resize`, {
+    const rawResponse = await csrfFetch(`${API_BASE_URL}/resize`, {
       method: 'POST',
       credentials: 'include',
       body: formData,
     });
-    if (!response.ok) {
-      throw new Error(`Backend Resize failed: ${response.statusText}`);
-    }
+
+    const response = await handleApiResponse(rawResponse, 'Backend Resize failed');
 
     const blob = await response.blob();
     const resizedFile = new File([blob], file.name, { type: blob.type });

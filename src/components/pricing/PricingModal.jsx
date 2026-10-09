@@ -407,7 +407,7 @@ export default function PricingModal({ isOpen, onClose, onOpenAuth }) {
                       Pro Yearly
                     </h3>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 2 }}>
-                      <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0F172A' }}>₹4,999</span>
+                      <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0F172A' }}>₹4,389</span>
                       <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 700 }}>/year</span>
                       <span style={{ fontSize: '0.72rem', color: '#94A3B8', marginLeft: 4 }}>($59.99)</span>
                     </div>

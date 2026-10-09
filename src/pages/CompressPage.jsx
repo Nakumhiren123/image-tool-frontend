@@ -121,24 +121,43 @@ export default function CompressPage() {
         setItems([]);
     };
 
-    // ── Process (exact compress logic from original App.jsx) ──
+    // ── Process ──
     const handleProcessAll = async () => {
         if (!items.length) return;
         setIsProcessing(true);
+        setErrorMessage('');
         try {
             const updated = [];
+            let hasError = false;
             for (const item of items) {
-                const result = compressMode === 'targetSize'
-                    ? await compressToTargetSize(item.file, compressTargetKB, compressFormat)
-                    : await compressImage(item.file, compressQuality, compressFormat);
-                updated.push({ ...item, status: 'done', processedResult: result });
+                try {
+                    const result = compressMode === 'targetSize'
+                        ? await compressToTargetSize(item.file, compressTargetKB, compressFormat)
+                        : await compressImage(item.file, compressQuality, compressFormat);
+                    updated.push({ ...item, status: 'done', processedResult: result });
+                } catch (itemErr) {
+                    console.error('Failed to compress file:', item.file?.name, itemErr);
+                    hasError = true;
+                    if (itemErr?.upgradeRequired || itemErr?.code === 'BATCH_LIMIT_EXCEEDED' || itemErr?.code === 'FILE_SIZE_EXCEEDED') {
+                        setPricingModalOpen(true);
+                    }
+                    const msg = itemErr.message || 'Processing failed. Please try a different image.';
+                    updated.push({ ...item, status: 'error', errorMsg: msg, error: msg });
+                }
             }
             setItems(updated);
+            if (hasError) {
+                setErrorMessage('One or more files failed to process. Please check the error indicators below.');
+            }
             if (updated.length > 0 && updated[0].processedResult) {
                 setPreviewIndex(0);
             }
         } catch (err) {
             console.error(err);
+            if (err?.upgradeRequired || err?.code === 'BATCH_LIMIT_EXCEEDED' || err?.code === 'FILE_SIZE_EXCEEDED') {
+                setPricingModalOpen(true);
+            }
+            setErrorMessage(err?.message || 'Processing failed. Please try a different image.');
         } finally {
             setIsProcessing(false);
         }

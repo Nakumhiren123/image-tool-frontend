@@ -128,6 +128,9 @@ export default function CompressionSlider({ mode, setMode, quality, setQuality, 
           <p style={{ fontSize: '0.75rem', color: 'var(--text-3)', lineHeight: 1.5, fontStyle: 'italic' }}>
             ⚡ Uses iterative binary search to automatically tune quality until output matches your target size.
           </p>
+          <p style={{ fontSize: '0.72rem', color: 'var(--text-3)', lineHeight: 1.4, margin: 0 }}>
+            ℹ️ <strong>Target Precision Note:</strong> Output size targeting is approximate (typically within ±10% of your target KB size).
+          </p>
         </div>
       )}
     </div>

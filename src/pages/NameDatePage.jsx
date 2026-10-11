@@ -156,7 +156,7 @@ export default function NameDatePage() {
                                 {firstItem.width && firstItem.height && <span style={{ fontSize: '0.75rem', color: 'var(--text-3)', fontWeight: 600 }}>{firstItem.width} × {firstItem.height}px</span>}
                             </div>
                             <div style={{ position: 'relative', width: '100%', minHeight: 260, maxHeight: 420, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'repeating-conic-gradient(rgba(255,255,255,0.025) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px', overflow: 'hidden' }}>
-                                <img src={firstItem.processedResult?.url || firstItem.previewUrl} alt={firstItem.file?.name} style={{ maxWidth: '100%', maxHeight: 420, objectFit: 'contain', display: 'block', borderRadius: 4 }} />
+                                <img src={firstItem.processedResult?.url || firstItem.previewUrl} alt={firstItem.file?.name} width="600" height="420" style={{ maxWidth: '100%', maxHeight: 420, width: '100%', height: 'auto', aspectRatio: '16/9', objectFit: 'contain', display: 'block', borderRadius: 4 }} />
                                 {isProcessing && (
                                     <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.65)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, backdropFilter: 'blur(4px)' }}>
                                         <div style={{ width: 44, height: 44, borderRadius: '50%', border: '3px solid rgba(99,102,241,0.25)', borderTopColor: 'var(--primary-light)', animation: 'spin 0.8s linear infinite' }} />

@@ -149,13 +149,32 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
     return <TestAdPlaceholder type={type} />;
   }
 
+  const isRectangle = type === 'rectangle';
+  const isSkyscraper = type === 'skyscraper';
+  const containerMinHeight = isRectangle ? '250px' : isSkyscraper ? '600px' : '90px';
+  const containerWidth = isRectangle ? '300px' : isSkyscraper ? '160px' : '100%';
+  const containerClass = isRectangle ? 'ad-slot-rectangle' : 'ad-slot-leaderboard';
+
   // ── Real AdSense ad ──
   if (activeClient && activeSlot) {
     return (
-      <div style={{ margin: '16px auto', textAlign: 'center', overflow: 'hidden' }}>
+      <div
+        className={containerClass}
+        style={{
+          minHeight: containerMinHeight,
+          width: containerWidth,
+          margin: '16px auto',
+          textAlign: 'center',
+          overflow: 'hidden',
+        }}
+      >
         <ins
           className="adsbygoogle"
-          style={{ display: 'block' }}
+          style={{
+            display: 'block',
+            minHeight: containerMinHeight,
+            width: containerWidth,
+          }}
           data-ad-client={activeClient}
           data-ad-slot={activeSlot}
           data-ad-format="auto"
@@ -169,8 +188,10 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
   const { w, h, label } = AD_SIZES[type] || AD_SIZES.interstitial;
   return (
     <div
+      className={containerClass}
       style={{
-        width: '100%',
+        minHeight: containerMinHeight,
+        width: containerWidth,
         maxWidth: w,
         height: h,
         margin: '0 auto',

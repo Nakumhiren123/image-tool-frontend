@@ -38,7 +38,7 @@ export default function FileCard({ item, onRemove, onPreview, onCardClick, onDow
             <span style={{ fontSize: '0.6rem', fontWeight: 800, color: '#93c5fd' }}>DOCX</span>
           </div>
         ) : (
-          <img src={processedResult?.url || previewUrl} alt={file.name} />
+          <img src={processedResult?.url || previewUrl} alt={file.name} width="56" height="56" />
         )}
 
         {/* Prominent GIF Thumbnail Badge */}

@@ -85,7 +85,7 @@ export default function ImagePreview({ items, currentIndex, onNavigate, onClose,
     }
 
     return (
-      <img src={processedResult.url} alt="Result" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 8 }} />
+      <img src={processedResult.url} alt="Result" width="800" height="450" style={{ maxWidth: '100%', maxHeight: '100%', width: '100%', height: 'auto', aspectRatio: '16/9', objectFit: 'contain', borderRadius: 8 }} />
     );
   };
 
@@ -145,7 +145,7 @@ export default function ImagePreview({ items, currentIndex, onNavigate, onClose,
               <span>ORIGINAL &nbsp;·&nbsp; <strong>{formatBytes(file.size)}</strong></span>
             </div>
             <div className="preview-img-box preview-img-box--original">
-              <img src={previewUrl} alt="Original" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 8 }} />
+              <img src={previewUrl} alt="Original" width="800" height="450" style={{ maxWidth: '100%', maxHeight: '100%', width: '100%', height: 'auto', aspectRatio: '16/9', objectFit: 'contain', borderRadius: 8 }} />
             </div>
           </div>
 

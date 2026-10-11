@@ -251,12 +251,15 @@ export default function InteractiveCropper({ item, cropRect, setCropRect }) {
             ref={imgRef}
             src={item.previewUrl}
             alt="Crop Target"
+            width="600"
+            height="340"
             draggable={false}
             onLoad={updateImgLayout}
             style={{
               display: 'block',
               width: '100%',
               maxHeight: 340,
+              aspectRatio: '16/9',
               objectFit: 'contain',
               pointerEvents: 'none',
             }}

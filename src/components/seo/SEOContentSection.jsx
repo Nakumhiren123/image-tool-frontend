@@ -77,7 +77,7 @@ export default function SEOContentSection() {
   };
 
   return (
-    <section className="seo-content-section" style={{ padding: '60px 24px', background: '#F8FAFC', borderTop: '1px solid #E2E8F0' }}>
+    <section className="seo-content-section" style={{ minHeight: '200px', padding: '60px 24px', background: '#F8FAFC', borderTop: '1px solid #E2E8F0' }}>
 
       {/* Embedded Rich Snippet Schemas */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />

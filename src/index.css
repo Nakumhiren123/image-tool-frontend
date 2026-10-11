@@ -1603,3 +1603,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
     gap: 10px !important;
   }
 }
+
+/* CLS Prevention */
+.seo-content-section {
+  min-height: 200px;
+}

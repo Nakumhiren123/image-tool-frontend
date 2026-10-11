@@ -295,8 +295,10 @@ export default function FilterPage() {
                                 <img
                                     src={firstItem.processedResult?.url || firstItem.previewUrl}
                                     alt={firstItem.file?.name}
+                                    width="600"
+                                    height="420"
                                     style={{
-                                        maxWidth: '100%', maxHeight: 420, objectFit: 'contain', display: 'block', borderRadius: 4,
+                                        maxWidth: '100%', maxHeight: 420, width: '100%', height: 'auto', aspectRatio: '16/9', objectFit: 'contain', display: 'block', borderRadius: 4,
                                         // Apply live CSS filter preview when no processed result yet
                                         filter: firstItem.processedResult ? 'none' : liveFilterCss,
                                         transition: 'filter 0.3s ease',

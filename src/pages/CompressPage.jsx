@@ -314,7 +314,9 @@ export default function CompressPage() {
                                 <img
                                     src={firstItem.processedResult?.url || firstItem.previewUrl}
                                     alt={firstItem.file?.name}
-                                    style={{ maxWidth: '100%', maxHeight: 420, objectFit: 'contain', display: 'block', borderRadius: 4 }}
+                                    width="600"
+                                    height="420"
+                                    style={{ maxWidth: '100%', maxHeight: 420, width: '100%', height: 'auto', aspectRatio: '16/9', objectFit: 'contain', display: 'block', borderRadius: 4 }}
                                 />
 
                                 {isProcessing && (

@@ -97,12 +97,32 @@
   <link rel="dns-prefetch" href="//fonts.googleapis.com" />
   <link rel="dns-prefetch" href="//fonts.gstatic.com" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+        media="print"
+        onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+  </noscript>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap"
-    rel="stylesheet" />
+  <style>
+    /* Prevent layout shift while fonts load */
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    /* Reserve space for ad slots to prevent CLS */
+    .ad-slot-leaderboard {
+      min-height: 90px;
+      width: 100%;
+    }
+    .ad-slot-rectangle {
+      min-height: 250px;
+      width: 300px;
+    }
+  </style>
 
   <!-- Base JSON-LD Schema.org Structured Data -->
   <script type="application/ld+json">

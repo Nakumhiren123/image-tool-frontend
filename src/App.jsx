@@ -22,7 +22,7 @@ const RotatePage = lazy(() => import('./pages/RotatePage'));
 const WatermarkPage = lazy(() => import('./pages/WatermarkPage'));
 const NameDatePage = lazy(() => import('./pages/NameDatePage'));
 const MergePage = lazy(() => import('./pages/MergePage'));
-import ConvertersHubPage from './pages/ConvertersHubPage';
+const ConvertersHubPage = lazy(() => import('./pages/ConvertersHubPage'));
 
 // Lazy-loaded Legal, Docs & Admin pages
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));

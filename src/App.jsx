@@ -92,8 +92,8 @@ export default function App() {
         </div>
       }>
         <Routes>
-          {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/converters" replace />} />
+          {/* Home / Converters hub */}
+          <Route path="/" element={<ConvertersHubPage />} />
 
           {/* ── Generic converter (user picks format manually) ── */}
           <Route path="/convert" element={<ConverterPage />} />

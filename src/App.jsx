@@ -22,7 +22,7 @@ const RotatePage = lazy(() => import('./pages/RotatePage'));
 const WatermarkPage = lazy(() => import('./pages/WatermarkPage'));
 const NameDatePage = lazy(() => import('./pages/NameDatePage'));
 const MergePage = lazy(() => import('./pages/MergePage'));
-const ConvertersHubPage = lazy(() => import('./pages/ConvertersHubPage'));
+import ConvertersHubPage from './pages/ConvertersHubPage';
 
 // Lazy-loaded Legal, Docs & Admin pages
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
@@ -196,12 +196,12 @@ export default function App() {
           {/* ── 404 Catch-all route ── */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+
+        <SEOContentSection />
+
+        {!isAdFree && <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>}
+        <Footer />
       </Suspense>
-
-      <SEOContentSection />
-
-      {!isAdFree && <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>}
-      <Footer />
 
       {/* Global Modals */}
       <AdInterstitialModal

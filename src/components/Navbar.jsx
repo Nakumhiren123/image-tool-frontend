@@ -226,7 +226,7 @@ export default function Navbar({ onOpenPricing }) {
               <span className="grad-text navbar-brand">PicCraft</span>
               {isPro && <span className="badge badge-indigo" style={{ padding: '2px 6px', fontSize: '0.6rem' }}>PRO</span>}
             </div>
-            <p className="navbar-tagline">All-in-One Toolbox</p>
+            <p className="navbar-tagline" style={{ color: 'rgb(71, 85, 105)' }}>All-in-One Toolbox</p>
           </div>
         </div>
 

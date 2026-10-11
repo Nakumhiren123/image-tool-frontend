@@ -53,7 +53,7 @@ export default function ConvertersHubPage() {
                 }}>
                     <span className="grad-text">Image Format Converters</span>
                 </h1>
-                <p style={{ fontSize: '1rem', color: 'var(--text-3)', maxWidth: 560, margin: '0 auto 32px' }}>
+                <p style={{ fontSize: '1rem', color: 'rgb(71, 85, 105)', maxWidth: 560, margin: '0 auto 32px' }}>
                     Free online converters for every image format — JPG, PNG, WEBP, AVIF, GIF, BMP, HEIC and more.
                     No signup, no upload limit on Pro, 100% browser-based.
                 </p>
@@ -140,7 +140,7 @@ export default function ConvertersHubPage() {
                                     <h2 style={{ margin: 0, fontFamily: 'var(--font-head)', fontWeight: 800, fontSize: '1.2rem', color: 'var(--text-1)' }}>
                                         {groupKey} Converters
                                     </h2>
-                                    <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-3)', fontWeight: 500 }}>
+                                    <p style={{ margin: 0, fontSize: '0.78rem', color: 'rgb(71, 85, 105)', fontWeight: 600 }}>
                                         {converters.length} format{converters.length !== 1 ? 's' : ''} available
                                     </p>
                                 </div>
@@ -211,7 +211,7 @@ export default function ConvertersHubPage() {
                                             {/* Description */}
                                             <p style={{
                                                 margin: 0, fontSize: '0.72rem',
-                                                color: 'var(--text-3)', lineHeight: 1.4,
+                                                color: 'rgb(71, 85, 105)', lineHeight: 1.4,
                                             }}>
                                                 {converter.description}
                                             </p>

@@ -61,7 +61,7 @@ export default function Footer() {
             <p style={{ fontSize: '0.82rem', color: '#64748B', lineHeight: 1.65, marginBottom: 20 }}>
               Free online image tools — convert, compress, resize, crop, and more. Fast, private, no sign-up needed.
             </p>
-            <p style={{ fontSize: '0.8rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <p style={{ fontSize: '0.8rem', color: 'rgb(100, 116, 139)', display: 'flex', alignItems: 'center', gap: 5 }}>
               Made with <Heart size={12} fill="#F43F5E" color="#F43F5E" /> for creators worldwide
             </p>
           </div>
@@ -157,7 +157,7 @@ export default function Footer() {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           flexWrap: 'wrap', gap: 12,
         }}>
-          <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: 0 }}>
+          <p style={{ fontSize: '0.78rem', color: 'rgb(71, 85, 105)', margin: 0 }}>
             © {new Date().getFullYear()} PicCraft. All rights reserved.
           </p>
 
@@ -166,9 +166,9 @@ export default function Footer() {
               <Link
                 key={l.to}
                 to={l.to}
-                style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 600, textDecoration: 'none', transition: 'color .15s' }}
+                style={{ fontSize: '0.78rem', color: 'rgb(71, 85, 105)', fontWeight: 600, textDecoration: 'none', transition: 'color .15s' }}
                 onMouseEnter={e => e.currentTarget.style.color = '#2563EB'}
-                onMouseLeave={e => e.currentTarget.style.color = '#94A3B8'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgb(71, 85, 105)'}
               >
                 {l.label}
               </Link>

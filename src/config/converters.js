@@ -121,17 +121,17 @@ export const FORMAT_LABELS = {
 
 // ── Format colors (for UI badges) ──────────────────────────────────────────
 export const FORMAT_COLORS = {
-    jpg: { bg: '#FEF3C7', color: '#D97706' },
-    jpeg: { bg: '#FEF3C7', color: '#D97706' },
-    png: { bg: '#EDE9FE', color: '#7C3AED' },
-    webp: { bg: '#D1FAE5', color: '#059669' },
-    avif: { bg: '#DBEAFE', color: '#2563EB' },
-    gif: { bg: '#FCE7F3', color: '#DB2777' },
-    bmp: { bg: '#F1F5F9', color: '#475569' },
-    pdf: { bg: '#FEE2E2', color: '#DC2626' },
-    heic: { bg: '#F0FDF4', color: '#16A34A' },
-    heif: { bg: '#F0FDF4', color: '#16A34A' },
-    ico: { bg: '#F0F9FF', color: '#0284C7' },
+    jpg: { bg: '#FEF3C7', color: '#92400E' },
+    jpeg: { bg: '#FEF3C7', color: '#92400E' },
+    png: { bg: '#EDE9FE', color: '#5B21B6' },
+    webp: { bg: '#D1FAE5', color: '#065F46' },
+    avif: { bg: '#DBEAFE', color: '#1E40AF' },
+    gif: { bg: '#FCE7F3', color: '#9D174D' },
+    bmp: { bg: '#F1F5F9', color: '#334155' },
+    pdf: { bg: '#FEE2E2', color: '#991B1B' },
+    heic: { bg: '#F0FDF4', color: '#166534' },
+    heif: { bg: '#F0FDF4', color: '#166534' },
+    ico: { bg: '#F0F9FF', color: '#075985' },
 };
 
 // ── SEO meta per converter (used in SEOHead component) ─────────────────────

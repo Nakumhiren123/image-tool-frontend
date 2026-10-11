@@ -210,7 +210,7 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
         boxSizing: 'border-box',
       }}
     >
-      <span style={{ fontSize: '0.62rem', fontWeight: 800, color: '#94A3B8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <span style={{ fontSize: '0.62rem', fontWeight: 800, color: 'rgb(71, 85, 105)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         ADVERTISEMENT
       </span>
       <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748B', lineHeight: 1.3 }}>

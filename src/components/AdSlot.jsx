@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const API_BASE =
   import.meta.env.VITE_API_URL ||
@@ -123,6 +123,7 @@ function TestAdPlaceholder({ type }) {
 
 export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot = null, testMode = false }) {
   const [adData, setAdData] = useState(null);
+  const adRef = useRef(null);
 
   useEffect(() => {
     fetchAdsWithCache(API_BASE)
@@ -137,12 +138,31 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
   const activeSlot = adData?.ad_slot || adSlot;
 
   useEffect(() => {
-    try {
-      if (activeClient && activeSlot && window.adsbygoogle) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      }
-    } catch { /* silent */ }
-  }, [activeClient, activeSlot]);
+    if (!activeClient || !activeSlot) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Only push ad when element is visible in viewport
+            try {
+              (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+              console.error('Ad error:', e);
+            }
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (adRef.current) {
+      observer.observe(adRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [activeClient, activeSlot, adData]);
 
   // ── Test / Dev mode: show visual dummy ──
   if (testMode || import.meta.env.DEV) {
@@ -159,6 +179,7 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
   if (activeClient && activeSlot) {
     return (
       <div
+        ref={adRef}
         className={containerClass}
         style={{
           minHeight: containerMinHeight,

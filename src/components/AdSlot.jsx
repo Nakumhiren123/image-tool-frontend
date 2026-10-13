@@ -11,7 +11,7 @@ const ADS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 async function fetchAdsWithCache(apiBase) {
   if (_adsCache.data && (Date.now() - _adsCache.ts) < ADS_CACHE_TTL) {
-    return _adsCache.data;
+    return _adsCache.data
   }
   const res = await fetch(`${apiBase}/ads`);
   const json = await res.json();

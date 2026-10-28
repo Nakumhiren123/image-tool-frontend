@@ -259,6 +259,8 @@ export default function MergePage() {
                                 overflow: 'hidden',
                             }}>
                                 <img
+                                    loading="lazy"
+                                    decoding="async"
                                     src={firstItem.processedResult?.url || firstItem.previewUrl}
                                     alt="Merged preview"
                                     width="600"

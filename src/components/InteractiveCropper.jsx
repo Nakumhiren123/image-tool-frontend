@@ -249,6 +249,8 @@ export default function InteractiveCropper({ item, cropRect, setCropRect }) {
           {/* Image */}
           <img
             ref={imgRef}
+            loading="lazy"
+            decoding="async"
             src={item.previewUrl}
             alt="Crop Target"
             width="600"

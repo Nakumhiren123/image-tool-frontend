@@ -122,47 +122,49 @@ function TestAdPlaceholder({ type }) {
 }
 
 export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot = null, testMode = false }) {
-  const [adData, setAdData] = useState(null);
-  const adRef = useRef(null);
+  const [adData, setAdData] = useState(adClient && adSlot ? { ad_client: adClient, ad_slot: adSlot } : null);
+  const adContainerRef = useRef(null);
+  const [adPushed, setAdPushed] = useState(false);
 
   useEffect(() => {
     fetchAdsWithCache(API_BASE)
       .then(ads => {
         const match = ads.find(ad => ad.position === type);
-        setAdData(match || null);
+        setAdData(match || (adClient && adSlot ? { ad_client: adClient, ad_slot: adSlot } : null));
       })
-      .catch(() => setAdData(null));
-  }, [type]);
+      .catch(() => setAdData(adClient && adSlot ? { ad_client: adClient, ad_slot: adSlot } : null));
+  }, [type, adClient, adSlot]);
 
   const activeClient = adData?.ad_client || adClient;
   const activeSlot = adData?.ad_slot || adSlot;
 
+  // Replace existing adsbygoogle push useEffect with this:
   useEffect(() => {
-    if (!activeClient || !activeSlot) return;
+    if (!adData?.ad_client || !adData?.ad_slot || adPushed) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            // Only push ad when element is visible in viewport
+          if (entry.isIntersecting && !adPushed) {
             try {
               (window.adsbygoogle = window.adsbygoogle || []).push({});
-            } catch (e) {
-              console.error('Ad error:', e);
+              setAdPushed(true);
+            } catch (err) {
+              console.error('AdSense error:', err);
             }
             observer.disconnect();
           }
         });
       },
-      { threshold: 0.1 }
+      { rootMargin: '200px', threshold: 0.01 }
     );
 
-    if (adRef.current) {
-      observer.observe(adRef.current);
+    if (adContainerRef.current) {
+      observer.observe(adContainerRef.current);
     }
 
     return () => observer.disconnect();
-  }, [activeClient, activeSlot, adData]);
+  }, [adData, adPushed]);
 
   // ── Test / Dev mode: show visual dummy ──
   if (testMode || import.meta.env.DEV) {
@@ -179,7 +181,7 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
   if (activeClient && activeSlot) {
     return (
       <div
-        ref={adRef}
+        ref={adContainerRef}
         className={containerClass}
         style={{
           minHeight: containerMinHeight,

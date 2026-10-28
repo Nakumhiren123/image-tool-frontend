@@ -281,6 +281,8 @@ export default function ConverterPage({ from, to }) {
                             </div>
                             <div style={{ position: 'relative', width: '100%', minHeight: 260, maxHeight: 420, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'repeating-conic-gradient(rgba(255,255,255,0.025) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px', overflow: 'hidden' }}>
                                 <img
+                                    loading="lazy"
+                                    decoding="async"
                                     src={firstItem.processedResult?.url || firstItem.previewUrl}
                                     alt={firstItem.file?.name}
                                     width="600"

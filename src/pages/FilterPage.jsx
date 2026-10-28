@@ -293,6 +293,8 @@ export default function FilterPage() {
                                 overflow: 'hidden',
                             }}>
                                 <img
+                                    loading="lazy"
+                                    decoding="async"
                                     src={firstItem.processedResult?.url || firstItem.previewUrl}
                                     alt={firstItem.file?.name}
                                     width="600"

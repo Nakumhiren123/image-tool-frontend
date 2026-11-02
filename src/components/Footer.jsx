@@ -35,6 +35,8 @@ export default function Footer() {
       marginTop: 'auto',
       borderTop: '1px solid #E2E8F0',
       background: '#FFFFFF',
+      contentVisibility: 'auto',
+      containIntrinsicSize: '0 300px',
     }}>
 
       {/* ── Main Footer Grid ──────────────────────────────────────────── */}

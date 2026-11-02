@@ -1,16 +1,18 @@
 // src/App.jsx
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SEOContentSection from './components/seo/SEOContentSection';
 import AdSlot from './components/AdSlot';
-import AdInterstitialModal from './components/AdInterstitialModal';
-import AuthModal from './components/auth/AuthModal';
-import PricingModal from './components/pricing/PricingModal';
-import AdminPanelModal from './components/admin/AdminPanelModal';
 import ScrollToTop from './components/ScrollToTop';
 import { useAuth } from './context/useAuth';
+
+// Lazy-loaded Modals
+const AdInterstitialModal = lazy(() => import('./components/AdInterstitialModal'));
+const AuthModal = lazy(() => import('./components/auth/AuthModal'));
+const PricingModal = lazy(() => import('./components/pricing/PricingModal'));
+const AdminPanelModal = lazy(() => import('./components/admin/AdminPanelModal'));
 
 // Lazy-loaded Tool pages for code splitting & fast initial loads
 const ConverterPage = lazy(() => import('./pages/ConverterPage'));
@@ -37,7 +39,7 @@ function ScrollToTopButton() {
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 300);
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -66,6 +68,8 @@ function ScrollToTopButton() {
 
 export default function App() {
   const { isAdFree } = useAuth();
+  const location = useLocation();
+  const isHome = location.pathname === '/' || location.pathname === '/converters';
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
@@ -82,8 +86,8 @@ export default function App() {
         onOpenAdmin={() => setAdminModalOpen(true)}
       />
 
-      {!isAdFree && <div className="side-ad-gutter side-ad-left"><AdSlot type="skyscraper" /></div>}
-      {!isAdFree && <div className="side-ad-gutter side-ad-right"><AdSlot type="skyscraper" /></div>}
+      {!isAdFree && !isHome && <div className="side-ad-gutter side-ad-left"><AdSlot type="skyscraper" /></div>}
+      {!isAdFree && !isHome && <div className="side-ad-gutter side-ad-right"><AdSlot type="skyscraper" /></div>}
 
       <Suspense fallback={
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 14 }}>
@@ -199,43 +203,59 @@ export default function App() {
 
         <SEOContentSection />
 
-        {!isAdFree && <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>}
+        {!isAdFree && !isHome && <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>}
         <Footer />
       </Suspense>
 
-      {/* Global Modals */}
-      <AdInterstitialModal
-        isOpen={adModal.open}
-        onClose={() => setAdModal(m => ({ ...m, open: false }))}
-        onAdComplete={adModal.onComplete || (() => { })}
-        onOpenPricing={() => { setAdModal(m => ({ ...m, open: false })); setPricingModalOpen(true); }}
-        fileName={adModal.fileName}
-      />
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        initialMode={authModalMode}
-        onSuccess={() => {
-          if (redirectAfterAuth) {
-            setRedirectAfterAuth(null);
-            setPricingModalOpen(true);
-          }
-        }}
-      />
-      <PricingModal
-        isOpen={pricingModalOpen}
-        onClose={() => setPricingModalOpen(false)}
-        onOpenAuth={(mode, planId) => {
-          setRedirectAfterAuth(planId || 'pricing');
-          setPricingModalOpen(false);
-          setAuthModalMode(mode);
-          setAuthModalOpen(true);
-        }}
-      />
-      <AdminPanelModal
-        isOpen={adminModalOpen}
-        onClose={() => setAdminModalOpen(false)}
-      />
+      {/* Global Modals — lazy loaded */}
+      {adModal.open && (
+        <Suspense fallback={null}>
+          <AdInterstitialModal
+            isOpen={adModal.open}
+            onClose={() => setAdModal(m => ({ ...m, open: false }))}
+            onAdComplete={adModal.onComplete || (() => { })}
+            onOpenPricing={() => { setAdModal(m => ({ ...m, open: false })); setPricingModalOpen(true); }}
+            fileName={adModal.fileName}
+          />
+        </Suspense>
+      )}
+      {authModalOpen && (
+        <Suspense fallback={null}>
+          <AuthModal
+            isOpen={authModalOpen}
+            onClose={() => setAuthModalOpen(false)}
+            initialMode={authModalMode}
+            onSuccess={() => {
+              if (redirectAfterAuth) {
+                setRedirectAfterAuth(null);
+                setPricingModalOpen(true);
+              }
+            }}
+          />
+        </Suspense>
+      )}
+      {pricingModalOpen && (
+        <Suspense fallback={null}>
+          <PricingModal
+            isOpen={pricingModalOpen}
+            onClose={() => setPricingModalOpen(false)}
+            onOpenAuth={(mode, planId) => {
+              setRedirectAfterAuth(planId || 'pricing');
+              setPricingModalOpen(false);
+              setAuthModalMode(mode);
+              setAuthModalOpen(true);
+            }}
+          />
+        </Suspense>
+      )}
+      {adminModalOpen && (
+        <Suspense fallback={null}>
+          <AdminPanelModal
+            isOpen={adminModalOpen}
+            onClose={() => setAdminModalOpen(false)}
+          />
+        </Suspense>
+      )}
       <ScrollToTopButton />
     </div>
   );

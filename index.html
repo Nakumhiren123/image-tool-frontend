@@ -97,22 +97,32 @@
 
   <!-- Google Fonts Preconnect for Performance Optimization -->
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <!-- Google Analytics — deferred to avoid render blocking -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-XXXXXXXXXX');
+    window.addEventListener('load', function() {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+      document.head.appendChild(s);
+    });
   </script>
 
-  <!-- Google AdSense -->
-  <script
-    async
-    defer
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-    crossorigin="anonymous"
-  ></script>
+  <!-- Google AdSense — only loaded on pages with ad slots -->
+  <script>
+    (function() {
+      if (window.location.pathname === '/' || window.location.pathname === '/converters') return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.defer = true;
+      s.crossOrigin = 'anonymous';
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX';
+      document.head.appendChild(s);
+    })();
+  </script>
 
   <!-- Preconnect to font servers -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

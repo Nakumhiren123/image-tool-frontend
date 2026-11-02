@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Search, Zap, Shield, Globe } from 'lucide-react';
 import SEOHead from '../components/seo/SEOHead';
-import AdSlot from '../components/AdSlot';
+
 import { getConvertersGrouped, FORMAT_COLORS } from '../config/converters';
 
 const GROUPED = getConvertersGrouped();
@@ -152,6 +152,8 @@ export default function ConvertersHubPage() {
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
                                 gap: 12,
+                                contentVisibility: 'auto',
+                                containIntrinsicSize: '0 250px',
                             }}>
                                 {converters.map((converter) => {
                                     const toColors = FORMAT_COLORS[converter.to] || { bg: '#EDE9FE', color: '#7C3AED' };
@@ -231,11 +233,6 @@ export default function ConvertersHubPage() {
                         </div>
                     );
                 })}
-            </div>
-
-            {/* ── Bottom Ad ── */}
-            <div style={{ marginTop: 60 }}>
-                <AdSlot type="leaderboard" />
             </div>
         </main>
     );

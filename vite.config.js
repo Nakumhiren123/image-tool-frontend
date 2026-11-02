@@ -15,12 +15,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes('preload-helper') || id.includes('vite/'))
+            return 'vendor-react';
+          if (id.includes('node_modules/@react-oauth'))
+            return 'vendor-oauth';
           if (id.includes('node_modules/heic2any'))
             return 'vendor-heic';
-          if (id.includes('node_modules/jspdf'))
-            return 'vendor-jspdf';
-          if (id.includes('node_modules/html2canvas'))
-            return 'vendor-html2canvas';
           if (id.includes('node_modules/docx'))
             return 'vendor-docx';
           if (id.includes('node_modules/jszip'))

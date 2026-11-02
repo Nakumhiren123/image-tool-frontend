@@ -138,6 +138,19 @@ export default function AdSlot({ type = 'leaderboard', adClient = null, adSlot =
   const activeClient = adData?.ad_client || adClient;
   const activeSlot = adData?.ad_slot || adSlot;
 
+  // Ensure AdSense script is loaded when an ad slot is active
+  useEffect(() => {
+    if (!activeClient) return;
+    if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+      const s = document.createElement('script');
+      s.async = true;
+      s.defer = true;
+      s.crossOrigin = 'anonymous';
+      s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${activeClient}`;
+      document.head.appendChild(s);
+    }
+  }, [activeClient]);
+
   // Replace existing adsbygoogle push useEffect with this:
   useEffect(() => {
     if (!adData?.ad_client || !adData?.ad_slot || adPushed) return;

@@ -1,3 +1,5 @@
+import heic2any from 'heic2any';
+
 /**
  * Reads a File or Blob into an HTMLImageElement (Supports iPhone HEIC / HEIF photos)
  * @param {File|Blob} file 
@@ -14,7 +16,6 @@ export async function loadImage(file) {
 
   if (isHeic) {
     try {
-      const { default: heic2any } = await import('heic2any');
       const convertedBlob = await heic2any({
         blob: file,
         toType: 'image/jpeg',

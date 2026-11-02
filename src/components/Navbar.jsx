@@ -5,6 +5,7 @@ import { Image, Layers, Minimize2, Maximize2, Crop, RotateCw, Type, Grid, UserCh
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { getConvertersGrouped, FORMAT_COLORS } from '../config/converters';
+import ScrollToTop from './ScrollToTop';
 
 // ── Format group order in dropdown ──
 const FORMAT_ORDER = ['JPG', 'PNG', 'JPEG', 'WEBP', 'AVIF', 'GIF', 'BMP', 'HEIC'];
@@ -29,37 +30,36 @@ function ConvertDropdown({ onClose, triggerRef, dropdownPortalRef }) {
 
   // Calculate a viewport-safe position from the trigger button
   React.useEffect(() => {
-    let rafId = null;
     const updatePosition = () => {
       if (!triggerRef?.current) return;
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        if (!triggerRef?.current) return;
-        const rect = triggerRef.current.getBoundingClientRect();
-        const dropdownWidth = Math.min(680, window.innerWidth - 32);
-        const halfWidth = dropdownWidth / 2;
-        const triggerCenter = rect.left + rect.width / 2;
-        const minCenter = 16 + halfWidth;
-        const maxCenter = window.innerWidth - 16 - halfWidth;
-        const safeCenter = Math.max(
-          minCenter,
-          Math.min(triggerCenter, maxCenter)
-        );
 
-        setPosition({
-          top: rect.bottom + 8,
-          left: safeCenter,
-        });
+      const rect = triggerRef.current.getBoundingClientRect();
+
+      const dropdownWidth = Math.min(680, window.innerWidth - 32);
+      const halfWidth = dropdownWidth / 2;
+
+      const triggerCenter = rect.left + rect.width / 2;
+
+      const minCenter = 16 + halfWidth;
+      const maxCenter = window.innerWidth - 16 - halfWidth;
+
+      const safeCenter = Math.max(
+        minCenter,
+        Math.min(triggerCenter, maxCenter)
+      );
+
+      setPosition({
+        top: rect.bottom + 8,
+        left: safeCenter,
       });
     };
 
     updatePosition();
 
-    window.addEventListener('resize', updatePosition, { passive: true });
-    window.addEventListener('scroll', updatePosition, { passive: true });
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition);
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', updatePosition);
     };
@@ -210,6 +210,8 @@ export default function Navbar({ onOpenPricing }) {
 
   return (
     <header className="navbar-header">
+
+      <ScrollToTop />
 
       {/* ── Main Row ── */}
       <div className="navbar-row">

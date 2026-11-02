@@ -1,12 +1,15 @@
 // src/App.jsx
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SEOContentSection from './components/seo/SEOContentSection';
-import AdSlot from './components/AdSlot';
 import ScrollToTop from './components/ScrollToTop';
 import { useAuth } from './context/useAuth';
+import ConvertersHubPage from './pages/ConvertersHubPage';
+
+// Lazy-loaded AdSlot (never loaded on homepage)
+const AdSlot = lazy(() => import('./components/AdSlot'));
 
 // Lazy-loaded Modals
 const AdInterstitialModal = lazy(() => import('./components/AdInterstitialModal'));
@@ -24,7 +27,6 @@ const RotatePage = lazy(() => import('./pages/RotatePage'));
 const WatermarkPage = lazy(() => import('./pages/WatermarkPage'));
 const NameDatePage = lazy(() => import('./pages/NameDatePage'));
 const MergePage = lazy(() => import('./pages/MergePage'));
-const ConvertersHubPage = lazy(() => import('./pages/ConvertersHubPage'));
 
 // Lazy-loaded Legal, Docs & Admin pages
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
@@ -86,8 +88,16 @@ export default function App() {
         onOpenAdmin={() => setAdminModalOpen(true)}
       />
 
-      {!isAdFree && !isHome && <div className="side-ad-gutter side-ad-left"><AdSlot type="skyscraper" /></div>}
-      {!isAdFree && !isHome && <div className="side-ad-gutter side-ad-right"><AdSlot type="skyscraper" /></div>}
+      {!isAdFree && !isHome && (
+        <Suspense fallback={null}>
+          <div className="side-ad-gutter side-ad-left"><AdSlot type="skyscraper" /></div>
+        </Suspense>
+      )}
+      {!isAdFree && !isHome && (
+        <Suspense fallback={null}>
+          <div className="side-ad-gutter side-ad-right"><AdSlot type="skyscraper" /></div>
+        </Suspense>
+      )}
 
       <Suspense fallback={
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 14 }}>
@@ -203,7 +213,11 @@ export default function App() {
 
         <SEOContentSection />
 
-        {!isAdFree && !isHome && <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>}
+        {!isAdFree && !isHome && (
+          <Suspense fallback={null}>
+            <div style={{ padding: '0 24px 32px' }}><AdSlot type="leaderboard" /></div>
+          </Suspense>
+        )}
         <Footer />
       </Suspense>
 

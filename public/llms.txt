@@ -1,0 +1,27 @@
+# PicCraft
+
+> Free, fast, and privacy-focused online image suite for format conversion, target KB compression, and photo editing directly in your web browser.
+
+## Image Converters
+- [JPG to PNG](https://image-tool-frontend.vercel.app/jpg-to-png): Convert JPG images to PNG format with transparency support.
+- [PNG to JPG](https://image-tool-frontend.vercel.app/png-to-jpg): Convert PNG images to compressed JPG format for smaller file sizes.
+- [HEIC to JPG](https://image-tool-frontend.vercel.app/heic-to-jpg): Convert Apple iPhone HEIC and HEIF photos to standard JPG format.
+- [WEBP to JPG](https://image-tool-frontend.vercel.app/webp-to-jpg): Convert Google WEBP images to universally compatible JPG format.
+- [JPG to WEBP](https://image-tool-frontend.vercel.app/jpg-to-webp): Convert JPG to modern WEBP format for optimal web performance.
+- [JPG to PDF](https://image-tool-frontend.vercel.app/jpg-to-pdf): Convert images into standard downloadable PDF documents.
+- [All Converters](https://image-tool-frontend.vercel.app/converters): Complete directory of 46+ client-side image conversion pairs.
+
+## Image Optimization Tools
+- [Compress Image](https://image-tool-frontend.vercel.app/compress): Compress images to target KB limits (20KB, 50KB, 100KB) with iterative precision.
+- [Resize Image](https://image-tool-frontend.vercel.app/resize): Resize dimensions with passport and government exam upload presets.
+- [Crop Image](https://image-tool-frontend.vercel.app/crop): Interactively crop images with custom and fixed aspect ratios.
+- [Rotate & Flip](https://image-tool-frontend.vercel.app/rotate): Rotate images by 90, 180, or 270 degrees and flip horizontally or vertically.
+- [Photo Filters](https://image-tool-frontend.vercel.app/filter): Apply color adjustments, grayscale, sepia, vintage, and brightness controls.
+- [Watermark Image](https://image-tool-frontend.vercel.app/watermark): Add text or logo watermarks with opacity and positioning controls.
+- [Merge Images](https://image-tool-frontend.vercel.app/merge): Combine multiple photos into a single vertical or horizontal composite.
+
+## Information & Policies
+- [Privacy Policy](https://image-tool-frontend.vercel.app/privacy): Information regarding local browser processing, cookies, and privacy guarantees.
+- [Terms of Service](https://image-tool-frontend.vercel.app/terms): Terms of service governing usage of PicCraft web image tools.
+- [API Documentation](https://image-tool-frontend.vercel.app/api-docs): Technical documentation for developer integrations and endpoints.
+

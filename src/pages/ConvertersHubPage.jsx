@@ -118,11 +118,17 @@ export default function ConvertersHubPage() {
 
             {/* ── Converter groups ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
-                {Object.entries(filteredGroups).map(([groupKey, converters]) => {
+                {Object.entries(filteredGroups).map(([groupKey, converters], index) => {
                     const colors = FORMAT_COLORS[groupKey.toLowerCase()] || { bg: '#EDE9FE', color: '#7C3AED' };
 
                     return (
-                        <div key={groupKey}>
+                        <div
+                            key={groupKey}
+                            style={{
+                                contentVisibility: index > 0 ? 'auto' : 'visible',
+                                containIntrinsicSize: index > 0 ? '0 320px' : 'none',
+                            }}
+                        >
 
                             {/* Group header */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { X, User, Mail, Lock, UserPlus, LogIn, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useAuth } from '../../context/useAuth';
 
 const GoogleSignInButton = memo(function GoogleSignInButton({ onSuccess, onError }) {
@@ -25,16 +25,18 @@ const GoogleSignInButton = memo(function GoogleSignInButton({ onSuccess, onError
   }
 
   return (
-    <GoogleLogin
-      onSuccess={onSuccess}
-      onError={onError}
-      useOneTap={false}
-      theme="outline"
-      size="large"
-      shape="pill"
-      text="continue_with"
-      width={String(Math.min(380, window.innerWidth - 80))}
-    />
+    <GoogleOAuthProvider clientId={clientId}>
+      <GoogleLogin
+        onSuccess={onSuccess}
+        onError={onError}
+        useOneTap={false}
+        theme="outline"
+        size="large"
+        shape="pill"
+        text="continue_with"
+        width={String(Math.min(380, window.innerWidth - 80))}
+      />
+    </GoogleOAuthProvider>
   );
 });
 
